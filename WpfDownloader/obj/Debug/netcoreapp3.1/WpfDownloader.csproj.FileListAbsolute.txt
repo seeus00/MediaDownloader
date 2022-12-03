@@ -1,0 +1,160 @@
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.exe
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.deps.json
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.runtimeconfig.json
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.runtimeconfig.dev.json
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.pdb
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.AssemblyReference.cache
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\App.g.cs
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader_MarkupCompile.cache
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader_MarkupCompile.lref
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\MainWindow.baml
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.g.resources
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.AssemblyInfoInputs.cache
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.AssemblyInfo.cs
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.CoreCompileInputs.cache
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.pdb
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.genruntimeconfig.cache
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Magick.NET-Q16-AnyCPU.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Magick.NET.Core.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Microsoft.Data.Sqlite.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Mono.Nat.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\MonoTorrent.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\ReusableTasks.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SixLabors.ImageSharp.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.batteries_v2.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.nativelibrary.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.core.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\Magick.Native-Q16-x64.dll.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\Magick.Native-Q16-x64.dll.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\Magick.Native-Q16-x64.dll.dylib
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\Magick.Native-Q16-x64.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\Magick.Native-Q16-x86.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\alpine-x64\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Meziantou.Framework.WPF.dll
+C:\Users\casey\source\repos\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.exe
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.deps.json
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.runtimeconfig.json
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.runtimeconfig.dev.json
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.pdb
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Magick.NET-Q16-AnyCPU.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Magick.NET.Core.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Meziantou.Framework.WPF.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Microsoft.Data.Sqlite.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Mono.Nat.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\MonoTorrent.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\ReusableTasks.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SixLabors.ImageSharp.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.batteries_v2.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.nativelibrary.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.core.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.provider.dynamic_cdecl.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\Magick.Native-Q16-x64.dll.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\Magick.Native-Q16-x64.dll.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\Magick.Native-Q16-x64.dll.dylib
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\Magick.Native-Q16-x64.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\Magick.Native-Q16-x86.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\alpine-x64\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-armel\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-mips64\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x86\native\libe_sqlite3.so
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\libe_sqlite3.dylib
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-arm\native\e_sqlite3.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.AssemblyReference.cache
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\App.g.cs
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader_MarkupCompile.cache
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader_MarkupCompile.lref
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\MainWindow.baml
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.g.resources
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.GeneratedMSBuildEditorConfig.editorconfig
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.AssemblyInfoInputs.cache
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.AssemblyInfo.cs
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.CoreCompileInputs.cache
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.dll
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.pdb
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.genruntimeconfig.cache
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.exe
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.deps.json
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.runtimeconfig.json
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.runtimeconfig.dev.json
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\WpfDownloader.pdb
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Magick.NET-Q16-AnyCPU.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Magick.NET.Core.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Meziantou.Framework.WPF.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Microsoft.Data.Sqlite.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\Mono.Nat.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\MonoTorrent.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\ReusableTasks.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SixLabors.ImageSharp.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.batteries_v2.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.nativelibrary.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.core.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\SQLitePCLRaw.provider.dynamic_cdecl.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\Magick.Native-Q16-x64.dll.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\Magick.Native-Q16-x64.dll.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\Magick.Native-Q16-x64.dll.dylib
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\Magick.Native-Q16-x64.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\Magick.Native-Q16-x86.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\alpine-x64\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-armel\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-mips64\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\linux-x86\native\libe_sqlite3.so
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\libe_sqlite3.dylib
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-arm\native\e_sqlite3.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.AssemblyReference.cache
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\App.g.cs
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader_MarkupCompile.cache
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader_MarkupCompile.lref
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\MainWindow.baml
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.g.resources
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.GeneratedMSBuildEditorConfig.editorconfig
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.AssemblyInfoInputs.cache
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.AssemblyInfo.cs
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.CoreCompileInputs.cache
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.dll
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.pdb
+E:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.genruntimeconfig.cache
+D:\C Sharp Stuff\WpfDownloader\WpfDownloader\obj\Debug\netcoreapp3.1\WpfDownloader.csproj.CopyComplete

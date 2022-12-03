@@ -1,0 +1,120 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>res\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Sites\Catmanga.cs" />
+    <Compile Remove="Sites\Hentai2Read.cs" />
+    <Compile Remove="Sites\ManaToki.cs" />
+    <Compile Remove="Sites\PandaArchive.cs" />
+    <Compile Remove="Sites\Vsco.cs" />
+    <Compile Remove="Sites\Yandex.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="icon.png" />
+    <None Remove="res\ArtStation.ico" />
+    <None Remove="res\bg.png" />
+    <None Remove="res\BitTorrent.ico" />
+    <None Remove="res\Danbooru.ico" />
+    <None Remove="res\DevianArt.ico" />
+    <None Remove="res\Downloading.png" />
+    <None Remove="res\EightMuses.ico" />
+    <None Remove="res\Error.png" />
+    <None Remove="res\Finished.png" />
+    <None Remove="res\FourChan.ico" />
+    <None Remove="res\Gelbooru.ico" />
+    <None Remove="res\Hanime.ico" />
+    <None Remove="res\Hentai2Read.ico" />
+    <None Remove="res\Hitomi.png" />
+    <None Remove="res\icon.png" />
+    <None Remove="res\Imgur.ico" />
+    <None Remove="res\JavGuru.ico" />
+    <None Remove="res\KemonoParty.ico" />
+    <None Remove="res\Manatoki.ico" />
+    <None Remove="res\Nhentai.ico" />
+    <None Remove="res\PandaArchive.ico" />
+    <None Remove="res\Pixiv.ico" />
+    <None Remove="res\Rule34.ico" />
+    <None Remove="res\Twitter.ico" />
+    <None Remove="res\Vsco.ico" />
+    <None Remove="res\Youtube.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="res\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.20.7" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.1" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.3.5" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+    <PackageReference Include="MonoTorrent" Version="2.0.6" />
+    <PackageReference Include="MySql.Data" Version="8.0.31" />
+    <PackageReference Include="Npgsql" Version="7.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="7.0.0" />
+    <PackageReference Include="WPF-UI" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icon.png" />
+    <Resource Include="res\ArtStation.ico" />
+    <Resource Include="res\bg.png" />
+    <Resource Include="res\BitTorrent.ico" />
+    <Resource Include="res\Danbooru.ico" />
+    <Resource Include="res\DevianArt.ico" />
+    <Resource Include="res\Downloading.png" />
+    <Resource Include="res\EightMuses.ico" />
+    <Resource Include="res\Error.png" />
+    <Resource Include="res\Finished.png" />
+    <Resource Include="res\FourChan.ico" />
+    <Resource Include="res\Gelbooru.ico" />
+    <Resource Include="res\Hanime.ico" />
+    <Resource Include="res\Hentai2Read.ico" />
+    <Resource Include="res\Hitomi.png" />
+    <Resource Include="res\icon.png" />
+    <Resource Include="res\Imgur.ico" />
+    <Resource Include="res\JavGuru.ico" />
+    <Resource Include="res\KemonoParty.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="res\Manatoki.ico" />
+    <Resource Include="res\Nhentai.ico" />
+    <Resource Include="res\PandaArchive.ico" />
+    <Resource Include="res\Pixiv.ico" />
+    <Resource Include="res\Rule34.ico" />
+    <Resource Include="res\Twitter.ico" />
+    <Resource Include="res\Vsco.ico" />
+    <Resource Include="res\Youtube.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  
+  
+  <PropertyGroup>
+	<UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+	
+</Project>

@@ -1,0 +1,388 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "WpfDownloader/1.0.0": {
+        "dependencies": {
+          "Magick.NET-Q16-AnyCPU": "8.4.0",
+          "Magick.NET.Core": "8.4.0",
+          "Meziantou.Framework.WPF": "1.5.4",
+          "Microsoft.Data.Sqlite": "5.0.11",
+          "Microsoft.Data.Sqlite.Core": "5.0.11",
+          "MonoTorrent": "2.0.1",
+          "SixLabors.ImageSharp": "1.0.4",
+          "System.Security.Cryptography.ProtectedData": "5.0.0"
+        },
+        "runtime": {
+          "WpfDownloader.dll": {}
+        }
+      },
+      "Magick.NET-Q16-AnyCPU/8.4.0": {
+        "dependencies": {
+          "Magick.NET.Core": "8.4.0"
+        },
+        "runtime": {
+          "lib/netstandard21/Magick.NET-Q16-AnyCPU.dll": {
+            "assemblyVersion": "8.4.0.0",
+            "fileVersion": "8.4.0.0"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-musl-x64/native/Magick.Native-Q16-x64.dll.so": {
+            "rid": "linux-musl-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-x64/native/Magick.Native-Q16-x64.dll.so": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx-x64/native/Magick.Native-Q16-x64.dll.dylib": {
+            "rid": "osx-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/Magick.Native-Q16-x64.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "7.1.0.12"
+          },
+          "runtimes/win-x86/native/Magick.Native-Q16-x86.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "7.1.0.12"
+          }
+        }
+      },
+      "Magick.NET.Core/8.4.0": {
+        "runtime": {
+          "lib/netstandard21/Magick.NET.Core.dll": {
+            "assemblyVersion": "8.4.0.0",
+            "fileVersion": "8.4.0.0"
+          }
+        }
+      },
+      "Meziantou.Framework.WPF/1.5.4": {
+        "dependencies": {
+          "System.Collections.Immutable": "5.0.0"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Meziantou.Framework.WPF.dll": {
+            "assemblyVersion": "1.5.4.0",
+            "fileVersion": "1.5.4.0"
+          }
+        }
+      },
+      "Microsoft.Data.Sqlite/5.0.11": {
+        "dependencies": {
+          "Microsoft.Data.Sqlite.Core": "5.0.11",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.0.4"
+        }
+      },
+      "Microsoft.Data.Sqlite.Core/5.0.11": {
+        "dependencies": {
+          "SQLitePCLRaw.core": "2.0.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Data.Sqlite.dll": {
+            "assemblyVersion": "5.0.11.0",
+            "fileVersion": "5.0.1121.47202"
+          }
+        }
+      },
+      "Mono.Nat/3.0.1": {
+        "runtime": {
+          "lib/netstandard2.1/Mono.Nat.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.1.0"
+          }
+        }
+      },
+      "MonoTorrent/2.0.1": {
+        "dependencies": {
+          "Mono.Nat": "3.0.1",
+          "ReusableTasks": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/MonoTorrent.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "2.0.1.0"
+          }
+        }
+      },
+      "ReusableTasks/2.0.0": {
+        "runtime": {
+          "lib/netstandard2.1/ReusableTasks.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "SixLabors.ImageSharp/1.0.4": {
+        "runtime": {
+          "lib/netcoreapp3.1/SixLabors.ImageSharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.4.0"
+          }
+        }
+      },
+      "SQLitePCLRaw.bundle_e_sqlite3/2.0.4": {
+        "dependencies": {
+          "SQLitePCLRaw.core": "2.0.4",
+          "SQLitePCLRaw.lib.e_sqlite3": "2.0.4",
+          "SQLitePCLRaw.provider.dynamic_cdecl": "2.0.4"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/SQLitePCLRaw.batteries_v2.dll": {
+            "assemblyVersion": "2.0.4.976",
+            "fileVersion": "2.0.4.976"
+          },
+          "lib/netcoreapp3.1/SQLitePCLRaw.nativelibrary.dll": {
+            "assemblyVersion": "2.0.4.976",
+            "fileVersion": "2.0.4.976"
+          }
+        }
+      },
+      "SQLitePCLRaw.core/2.0.4": {
+        "dependencies": {
+          "System.Memory": "4.5.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+            "assemblyVersion": "2.0.4.976",
+            "fileVersion": "2.0.4.976"
+          }
+        }
+      },
+      "SQLitePCLRaw.lib.e_sqlite3/2.0.4": {
+        "runtimeTargets": {
+          "runtimes/alpine-x64/native/libe_sqlite3.so": {
+            "rid": "alpine-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-arm/native/libe_sqlite3.so": {
+            "rid": "linux-arm",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-arm64/native/libe_sqlite3.so": {
+            "rid": "linux-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-armel/native/libe_sqlite3.so": {
+            "rid": "linux-armel",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-mips64/native/libe_sqlite3.so": {
+            "rid": "linux-mips64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+            "rid": "linux-musl-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-x64/native/libe_sqlite3.so": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-x86/native/libe_sqlite3.so": {
+            "rid": "linux-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx-x64/native/libe_sqlite3.dylib": {
+            "rid": "osx-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-arm/native/e_sqlite3.dll": {
+            "rid": "win-arm",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-arm64/native/e_sqlite3.dll": {
+            "rid": "win-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/e_sqlite3.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/e_sqlite3.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "SQLitePCLRaw.provider.dynamic_cdecl/2.0.4": {
+        "dependencies": {
+          "SQLitePCLRaw.core": "2.0.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/SQLitePCLRaw.provider.dynamic_cdecl.dll": {
+            "assemblyVersion": "2.0.4.976",
+            "fileVersion": "2.0.4.976"
+          }
+        }
+      },
+      "System.Collections.Immutable/5.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.Collections.Immutable.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "System.Memory/4.5.3": {},
+      "System.Security.Cryptography.ProtectedData/5.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "WpfDownloader/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Magick.NET-Q16-AnyCPU/8.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MzXOnsYQS9DkDt0yKbd+laLFLojPcLrH59qZmKijl42vZrzpV3PiOUnMLuvaGgtIOAWpxAjwSnKkxMRLSbugVg==",
+      "path": "magick.net-q16-anycpu/8.4.0",
+      "hashPath": "magick.net-q16-anycpu.8.4.0.nupkg.sha512"
+    },
+    "Magick.NET.Core/8.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kSO4NMEj14U5ERMnAoGUvzfRcpqmkjeO93uKcKVqkCIVPJTEF4lgRJ9Jeza5Xx9v/ffNz7ExeGViyhj/2x3e6w==",
+      "path": "magick.net.core/8.4.0",
+      "hashPath": "magick.net.core.8.4.0.nupkg.sha512"
+    },
+    "Meziantou.Framework.WPF/1.5.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6J0dSW1msQFvd+EpUnfXZXRoHV5mkK0cASApteN0KiOKyvrbzXqDVqxn4HTY5KV+87DmWIfEus+IXzx1NpH+Ig==",
+      "path": "meziantou.framework.wpf/1.5.4",
+      "hashPath": "meziantou.framework.wpf.1.5.4.nupkg.sha512"
+    },
+    "Microsoft.Data.Sqlite/5.0.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gJeMewl7lX0+/4aempaTJi3Ix84+bXEaMcgBEG6m78DmKL4g2vkdJYeepqaIrZtssKStSsJ/qZshuPlp36ZdYw==",
+      "path": "microsoft.data.sqlite/5.0.11",
+      "hashPath": "microsoft.data.sqlite.5.0.11.nupkg.sha512"
+    },
+    "Microsoft.Data.Sqlite.Core/5.0.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-q9ysbiVbbiOiRwKxGLRRMOP9sNCfKoPsCjyyOI5m/BDgJ0JVcZjsO2jvAIFDnVKGpSFbCNwEa1aBihA1nkcvzQ==",
+      "path": "microsoft.data.sqlite.core/5.0.11",
+      "hashPath": "microsoft.data.sqlite.core.5.0.11.nupkg.sha512"
+    },
+    "Mono.Nat/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TLaz/q4i81y5nRyqBlJO2JS73JRyB1y6uhcgxhiyIn3MMIgH1mlTOPZNX7uUB0XYg6+7Igp4tFAqf/u+Unc3tw==",
+      "path": "mono.nat/3.0.1",
+      "hashPath": "mono.nat.3.0.1.nupkg.sha512"
+    },
+    "MonoTorrent/2.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yRPb1sgCaEEIKEJEcIT5sAXfNjBFGZrPFaLxYGHYp922KjVbXtShGrKC6fwA5vnOxhMC1jaOIlydXkw0XbTWyw==",
+      "path": "monotorrent/2.0.1",
+      "hashPath": "monotorrent.2.0.1.nupkg.sha512"
+    },
+    "ReusableTasks/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HWb7Yy7dQfWPh0V4X42ounPkrzUvL6gB7bwshX7EqBDCl879iBQIS0TRrXFXKOTO2dNJxaEfXnAbX8Fzv3U7Cw==",
+      "path": "reusabletasks/2.0.0",
+      "hashPath": "reusabletasks.2.0.0.nupkg.sha512"
+    },
+    "SixLabors.ImageSharp/1.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-H2rPiEr2ddBOltOuqRYhpLBAsQXDAhbzMMhhuksnBG2oefup1MXMchALe7yYkKJksNbtxbZHKeM6dn/68I75qw==",
+      "path": "sixlabors.imagesharp/1.0.4",
+      "hashPath": "sixlabors.imagesharp.1.0.4.nupkg.sha512"
+    },
+    "SQLitePCLRaw.bundle_e_sqlite3/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f5U8Sw0lRym8tTraJ2zm6OqcDrcrEVvcKDtYlKSLs3Ox9SerkwkPXiFXb/uiW0g2tJdUw6oBhsxI/l5DoRxXMg==",
+      "path": "sqlitepclraw.bundle_e_sqlite3/2.0.4",
+      "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.0.4.nupkg.sha512"
+    },
+    "SQLitePCLRaw.core/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4XlDZpDAsboMD6qZQcz9AaKblKDUTVHF+8f3lvbP7QjoqSRr2Xc0Lm34IK2pjRIYnyFLhI3yOJ5YWfOiCid2yg==",
+      "path": "sqlitepclraw.core/2.0.4",
+      "hashPath": "sqlitepclraw.core.2.0.4.nupkg.sha512"
+    },
+    "SQLitePCLRaw.lib.e_sqlite3/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oetvmtDZOE4Nnrtxd8Trapl9geBiu0rDCUXff46qGYjnUwzaU1mZ3OHnfR402tl32rx8gBWg3n5OBRaPJRbsGw==",
+      "path": "sqlitepclraw.lib.e_sqlite3/2.0.4",
+      "hashPath": "sqlitepclraw.lib.e_sqlite3.2.0.4.nupkg.sha512"
+    },
+    "SQLitePCLRaw.provider.dynamic_cdecl/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AY6+vv/4ji1mCkLrS6HP/88rHT9YFKRyg3LUj8RyIk6imJMUFdQDiP8rK8gq0a/0FbqspLjK1t7rtKcr7FXRYA==",
+      "path": "sqlitepclraw.provider.dynamic_cdecl/2.0.4",
+      "hashPath": "sqlitepclraw.provider.dynamic_cdecl.2.0.4.nupkg.sha512"
+    },
+    "System.Collections.Immutable/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FXkLXiK0sVVewcso0imKQoOxjoPAj42R8HtjjbSjVPAzwDfzoyoznWxgA3c38LDbN9SJux1xXoXYAhz98j7r2g==",
+      "path": "system.collections.immutable/5.0.0",
+      "hashPath": "system.collections.immutable.5.0.0.nupkg.sha512"
+    },
+    "System.Memory/4.5.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA==",
+      "path": "system.memory/4.5.3",
+      "hashPath": "system.memory.4.5.3.nupkg.sha512"
+    },
+    "System.Security.Cryptography.ProtectedData/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HGxMSAFAPLNoxBvSfW08vHde0F9uh7BjASwu6JF9JnXuEPhCY3YUqURn0+bQV/4UWeaqymmrHWV+Aw9riQCtCA==",
+      "path": "system.security.cryptography.protecteddata/5.0.0",
+      "hashPath": "system.security.cryptography.protecteddata.5.0.0.nupkg.sha512"
+    }
+  }
+}

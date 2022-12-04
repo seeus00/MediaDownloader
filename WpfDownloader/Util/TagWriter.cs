@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WpfDownloader.Sites;
 using WpfDownloader.Util.Database;
@@ -14,6 +15,9 @@ namespace Downloader.Util
     {
         private static readonly string DB_FILE = "info.db";
         private static readonly string JSON_FILE = $"{Site.DEFAULT_PATH}/nhentai/info.json";
+
+        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+
 
         public static async Task WriteTags(JToken tags, string path, string
             filename = null)
@@ -30,6 +34,8 @@ namespace Downloader.Util
 
         public static async Task WriteNhentaiTags(NhentaiInfo info)
         {
+            await semaphoreSlim.WaitAsync();
+
             string basePath = $"{Site.DEFAULT_PATH}/nhentai";
             if (!Directory.Exists(basePath)) Directory.CreateDirectory(basePath);
 
@@ -59,9 +65,11 @@ namespace Downloader.Util
             else
             {
                 var data = JsonParser.Parse(currInfo);
+
+                //Entry already exist, don't add duplicates
                 if (data.Where(entry => entry["code"].Value == info.CodeId.ToString()).Any())
                 {
-                    //Entry already exist, don't add duplicates
+                    semaphoreSlim.Release();
                     return;
                 }
                 data.Add(addInfo);
@@ -69,6 +77,8 @@ namespace Downloader.Util
                 await File.WriteAllTextAsync(JSON_FILE, string.Empty);
                 await File.WriteAllTextAsync(JSON_FILE, JsonParser.Serialize(data).ToString());
             }
+
+            semaphoreSlim.Release();
         }
 
         public static async Task WriteTags(string tags, string path, string

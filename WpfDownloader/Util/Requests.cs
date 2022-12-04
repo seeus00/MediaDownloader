@@ -475,10 +475,11 @@ namespace Downloader.Util
             //Rename duplicate file to: filename (1, 2, etc).ext
             if (File.Exists(currPath))
             {
-                if (duplicateFileName)
-                {
-                    currPath = DuplicateFilePath(currPath);
-                }
+                return;
+                //if (duplicateFileName)
+                //{
+                //    currPath = DuplicateFilePath(currPath);
+                //}
             }
 
             if (cancelToken.IsCancellationRequested) return;

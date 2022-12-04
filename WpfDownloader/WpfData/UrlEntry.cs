@@ -41,6 +41,7 @@ namespace WpfDownloader.WpfData
         } 
 
         public string ImgIconPath { get; set; }
+        public string Number { get; set; }
 
         private string _url;
         public string Url { 

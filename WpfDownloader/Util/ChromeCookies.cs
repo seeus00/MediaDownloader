@@ -8,12 +8,16 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChromeCookie
 {
+    //Supports firefox too
     public static class ChromeCookies
     {
+        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+
         private static byte[] _key = null;
         private static readonly string CHROME_LOCAL_STATE_PATH =
             $"{Environment.GetEnvironmentVariable("LocalAppData")}/Google/Chrome/User Data/Local State";
@@ -37,6 +41,26 @@ namespace ChromeCookie
             $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/Mozilla/Firefox";
 
         private static string FIREFOX_COOKIES_PATH = null;
+
+        static ChromeCookies()
+        {
+            if (string.IsNullOrEmpty(FIREFOX_COOKIES_PATH))
+            {
+                string defaultProfile = GetDefaultFirefoxProfile();
+                string origCookiePath = $"{FIREFOX_USER_PATH}/{defaultProfile}/cookies.sqlite";
+                string tempCookiePath = $"{FIREFOX_USER_PATH}/{defaultProfile}/cookies_temp.sqlite";
+
+                if (File.Exists(tempCookiePath))
+                {
+                    File.Delete(tempCookiePath);
+                }
+
+                File.Copy(origCookiePath, tempCookiePath);
+
+
+                FIREFOX_COOKIES_PATH = tempCookiePath;
+            }
+        }
 
 
         private static string GetDefaultFirefoxProfile()
@@ -114,21 +138,6 @@ namespace ChromeCookie
   
         private static CookieCollection GetFirefoxCookies(string domain)
         {
-            if (string.IsNullOrEmpty(FIREFOX_COOKIES_PATH))
-            {
-                string defaultProfile = GetDefaultFirefoxProfile();
-                string origCookiePath = $"{FIREFOX_USER_PATH}/{defaultProfile}/cookies.sqlite";
-                string tempCookiePath = $"{FIREFOX_USER_PATH}/{defaultProfile}/cookies_temp.sqlite";
-
-                if (File.Exists(tempCookiePath))
-                {
-                    File.Delete(tempCookiePath);
-                }
-                File.Copy(origCookiePath, tempCookiePath);
-               
-                FIREFOX_COOKIES_PATH = tempCookiePath;
-            }
-
             var cookies = new CookieCollection();
             using (var connection = new SqliteConnection($"Data Source={FIREFOX_COOKIES_PATH}"))
             {

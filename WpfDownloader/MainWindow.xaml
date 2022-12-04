@@ -140,28 +140,42 @@
 
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="60" >
+                            <GridViewColumn Width="60">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Background="#202020" IsEnabled="False" Foreground="White"></GridViewColumnHeader>
+                                    <GridViewColumnHeader Tag="Number" Click="GridViewColumnHeaderName_Click">#</GridViewColumnHeader>
                                 </GridViewColumn.Header>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0 3 0 3">
+                                            <TextBlock Name="NumberTextBlock" Text="{Binding Path=Number}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!--<GridViewColumn Width="60" >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Image Width="60" Height="20" Name="SiteIconImage" Source="{Binding Path=ImgIconPath}" ></Image>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="320">
+                            </GridViewColumn>-->
+                            
+                            <GridViewColumn Width="400">
                                 <GridViewColumn.Header>
                                     <GridViewColumnHeader Tag="Name" Click="GridViewColumnHeaderName_Click">Name</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Border Margin="0 3 0 3">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Margin="0 0 15 0" Height="20" Name="SiteIconImage" Source="{Binding Path=ImgIconPath}" ></Image>
                                             <TextBlock Name="NameTextBlock" Text="{Binding Path=Name}"/>
-                                        </Border>
+                                        </StackPanel>
+            
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+                            
                             <GridViewColumn Width="130">
                                 <GridViewColumn.Header>
                                     <GridViewColumnHeader Tag="StatusMsg" Click="GridViewColumnHeaderStatus_Click">Status</GridViewColumnHeader>

@@ -76,8 +76,8 @@ namespace WpfDownloader.Sites
             //};
             //await Requests.DownloadParticalContent(finalUrl, "C:/Users/casey/Desktop", newHeaders, fileName: "negro.mp4");
 
-            string pngPath = "G:/Users/casey/Pictures/danbooru/pomp_(qhtjd0120)/0f61339da882d5ba9e30a2da1ff7ef33.png";
-            await ImageUtil.PngToJpg(pngPath);
+            //string pngPath = "G:/Users/casey/Pictures/danbooru/pomp_(qhtjd0120)/0f61339da882d5ba9e30a2da1ff7ef33.png";
+            //await ImageUtil.PngToJpg(pngPath);
 
 
         }

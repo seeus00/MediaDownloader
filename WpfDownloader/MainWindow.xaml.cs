@@ -100,6 +100,8 @@ namespace WpfDownloader
         private static int _finished = 0;
         private static int _errors = 0;
 
+        private static int entryInd = 0;
+
         private GridViewColumnHeader _lastHeaderClickedName = null;
         private ListSortDirection _lastDirectionName = ListSortDirection.Ascending;
 
@@ -233,8 +235,10 @@ namespace WpfDownloader
 
         public async Task StartDownload()
         {
+            Debug.WriteLine(entryInd);
             int currLen = _startingEntries.Count;
             var tasks = new List<Task>();
+
             foreach (var entryPair in _startingEntries)
             {
                 if (_inProgressEntries.Contains(entryPair)) continue;
@@ -298,8 +302,6 @@ namespace WpfDownloader
                         _inProgressEntries.TryRemove(siteObj, out _);
 
                         _slim.Release();
-
-                        Debug.WriteLine($"Starting entries: {_startingEntries.Count}");
                     }
 
                     await Logger.WriteToLog(SUMMARY_FILE_PATH, $"{siteObj.Url} [SUCCESS]");
@@ -335,6 +337,7 @@ namespace WpfDownloader
             UrlEntry entry = new UrlEntry()
             {
                 Url = url,
+                Number = (++entryInd).ToString(),
                 //ImgIcon = ImageUtil.ICONS[site.ClassName],
                 ImgIconPath = $"/res/{site.ClassName}.ico",
                 Name = $"[{site.ClassName}] {url}",
@@ -360,6 +363,7 @@ namespace WpfDownloader
 
 
             _startingEntries.TryAdd(siteObj, entry);
+
             await StartDownload();
         }
 

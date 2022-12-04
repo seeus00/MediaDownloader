@@ -68,6 +68,11 @@ namespace WpfDownloader.Sites
             _newPath = $"{DEFAULT_PATH}/nhentai/{_code}";
             var mediaUrls = await GetMediaUrls(entry);
            
+            if (mediaUrls == null)
+            {
+                entry.StatusMsg = "Doujin doesn't exist";
+                return;
+            }
 
             //await TagWriter.WriteTags(_tags, newPath);
             await DownloadUtil.DownloadAllUrls(mediaUrls, _newPath, entry);
@@ -78,6 +83,8 @@ namespace WpfDownloader.Sites
 
         public async Task<IEnumerable<string>> GetMediaUrls(UrlEntry entry)
         {
+            await Task.Delay(1000);
+
             if (_cookieContainer == null)
             {
                 var baseAddress = new Uri("https://nhentai.net");
@@ -93,8 +100,13 @@ namespace WpfDownloader.Sites
                 HEADERS.Add(new Tuple<string, string>("User-Agent", string.IsNullOrEmpty(userAgent) ? "" : userAgent));
             }
 
-            var jsonStr = await Requests.GetStr($"https://nhentai.net/api/gallery/{_code}", HEADERS);
-            var data = JsonParser.Parse(jsonStr);
+            var resp = await Requests.Get($"https://nhentai.net/api/gallery/{_code}", HEADERS);
+            if (resp.StatusCode != HttpStatusCode.OK)
+            {
+                return null;
+            }
+
+            var data = JsonParser.Parse(await resp.Content.ReadAsStringAsync());
 
             _title = RemoveIllegalChars(data["title"]["pretty"].Value);
             entry.Name = $"[Nhentai] {_code} - {_title}";

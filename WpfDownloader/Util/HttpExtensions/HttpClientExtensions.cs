@@ -63,7 +63,7 @@ namespace WpfDownloader.Util.HttpExtensions
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Debug.WriteLine((float)totalBytes / contentLength.Value);
-                        entry.Bar.Value = ((float)totalBytes / contentLength.Value);
+                        entry.Bar.Value = ((float)totalBytes / contentLength.Value) * 100;
                     }, DispatcherPriority.ContextIdle);
                    
                 });

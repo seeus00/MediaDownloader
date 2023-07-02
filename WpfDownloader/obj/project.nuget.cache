@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jIh+F/gKW+Y747z2b7lubqNt22cOy7gviCuBOQouwwGFem+dIYk0lCByTAr8q3VaFSa5c7iY7R1ba8SJEyiIDg==",
+  "dgSpecHash": "PSzZvnvPeeEgmQYeXP8XPqPz7l9fJdyNr8z/Iw7CDLX1LvWdC/7ZBm0T9qOuiisMf6n2aAYViOFZoYgCjIHMJA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\casey\\source\\repos\\WpfDownloader\\WpfDownloader\\WpfDownloader.csproj",
+  "projectFilePath": "C:\\Users\\casey\\Documents\\Github\\HentaiDownloader\\WpfDownloader\\WpfDownloader.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\casey\\.nuget\\packages\\advancedstringbuilder\\0.1.0\\advancedstringbuilder.0.1.0.nupkg.sha512",
     "C:\\Users\\casey\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",

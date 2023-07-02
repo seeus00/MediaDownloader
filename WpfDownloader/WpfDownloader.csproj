@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>res\icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -19,6 +19,8 @@
   <ItemGroup>
     <None Remove="icon.png" />
     <None Remove="res\ArtStation.ico" />
+    <None Remove="res\Avjoa.ico" />
+    <None Remove="res\Avjoa.png" />
     <None Remove="res\bg.png" />
     <None Remove="res\BitTorrent.ico" />
     <None Remove="res\Danbooru.ico" />
@@ -68,6 +70,7 @@
   <ItemGroup>
     <Resource Include="icon.png" />
     <Resource Include="res\ArtStation.ico" />
+    <Resource Include="res\Avjoa.ico" />
     <Resource Include="res\bg.png" />
     <Resource Include="res\BitTorrent.ico" />
     <Resource Include="res\Danbooru.ico" />

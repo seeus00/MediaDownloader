@@ -272,7 +272,7 @@ public class JObject
 
     public JToken Parse()
     {
-        if (_jsonStr.Length == 0) 
+        if (string.IsNullOrEmpty(_jsonStr) || _jsonStr.Length == 0) 
             throw new Exception("JSON String is empty or null!!");
 
         var stack = new Stack<JToken>();

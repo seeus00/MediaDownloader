@@ -1,4 +1,5 @@
 ﻿using Azure;
+using MySqlX.XDevAPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,20 +29,23 @@ namespace Downloader.Util
         {
             CookieContainer = container,
             AllowAutoRedirect = true,
-            MaxAutomaticRedirections = 1
+            MaxAutomaticRedirections = 50
         };
 
-        private static HttpClient _client;
+        private static HttpClient client;
         public static readonly string DEFAULT_USER_AGENT =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36";
 
 
         static Requests()
         {
-            _client = new HttpClient(_handler);
-            //_client.DefaultRequestHeaders.Add("User-Agent", DEFAULT_USER_AGENT);
+            client = new HttpClient(_handler);
+            //client.DefaultRequestHeaders.Add("User-Agent", DEFAULT_USER_AGENT);
 
-            _client.DefaultRequestVersion = HttpVersion.Version20;
+            client.DefaultRequestVersion = HttpVersion.Version20;
+            client.Timeout = TimeSpan.FromMinutes(10);
+
+            client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
         }
 
         public static async Task<string> GetLatestEdgeUserAgent()
@@ -115,7 +119,7 @@ namespace Downloader.Util
 
         public static async Task<byte[]> GetBytes(string url)
         {
-            var req = await _client.GetAsync(url);
+            var req = await client.GetAsync(url);
             if (!req.IsSuccessStatusCode)
             {
                 return null;
@@ -141,7 +145,7 @@ namespace Downloader.Util
                     }
                 }
 
-                var req = await _client.SendAsync(requestMessage, cancelToken);
+                var req = await client.SendAsync(requestMessage, cancelToken);
                 if (!req.IsSuccessStatusCode)
                 {
                     return null;
@@ -168,7 +172,7 @@ namespace Downloader.Util
                     }
                 }
 
-                var req = await _client.SendAsync(requestMessage, cancelToken);
+                var req = await client.SendAsync(requestMessage, cancelToken);
                 if (!req.IsSuccessStatusCode)
                 {
                     return null;
@@ -200,7 +204,7 @@ namespace Downloader.Util
                 requestMessage.Content = new StringContent(payloadStr,
                     Encoding.UTF8, "application/json");
 
-                var resp = await _client.SendAsync(requestMessage, cancelToken);
+                var resp = await client.SendAsync(requestMessage, cancelToken);
                 if (!resp.IsSuccessStatusCode)
                 {
                     return resp.ReasonPhrase;
@@ -209,6 +213,7 @@ namespace Downloader.Util
                 return await resp.Content.ReadAsStringAsync();
             }
         }
+
 
         public static async Task<HttpResponseMessage> Get(string url, List<Tuple<string, string>> headers = null,
            CancellationToken cancelToken = default(CancellationToken))
@@ -227,7 +232,7 @@ namespace Downloader.Util
                     }
                 }
 
-                var resp = await _client.SendAsync(requestMessage, cancelToken);
+                var resp = await client.SendAsync(requestMessage, cancelToken);
                 return resp;
             }
         }
@@ -236,7 +241,54 @@ namespace Downloader.Util
         {
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
             {
-                var resp = await _client.SendAsync(requestMessage);
+                var resp = await client.SendAsync(requestMessage);
+                return resp;
+            }
+        }
+
+
+        public static async Task<HttpResponseMessage> PostAsync(string url, List<KeyValuePair<string, string>> payload,
+            List<Tuple<string, string>> headers = null)
+        {
+            using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, url))
+            {
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        if (requestMessage.Headers.Contains(header.Item1))
+                        {
+                            requestMessage.Headers.Remove(header.Item1);
+                        }
+                        requestMessage.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
+                    }
+                }
+
+                var formEncodedContent = new FormUrlEncodedContent(payload);
+                var resp = await client.PostAsync(url, formEncodedContent);
+                resp.EnsureSuccessStatusCode();
+
+                return resp;
+            }
+        }
+
+        public static async Task<HttpResponseMessage> PostAsync(string url, List<Tuple<string, string>> headers = null)
+        {
+            using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, url))
+            {
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        if (requestMessage.Headers.Contains(header.Item1))
+                        {
+                            requestMessage.Headers.Remove(header.Item1);
+                        }
+                        requestMessage.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
+                    }
+                }
+
+                var resp = await client.SendAsync(requestMessage);
                 return resp;
             }
         }
@@ -258,7 +310,7 @@ namespace Downloader.Util
                 }
 
                 var formEncodedContent = new FormUrlEncodedContent(payload);
-                var resp = await _client.PostAsync(url, formEncodedContent);
+                var resp = await client.PostAsync(url, formEncodedContent);
 
                 if (!resp.IsSuccessStatusCode)
                 {
@@ -285,7 +337,7 @@ namespace Downloader.Util
                     }
                 }
 
-                var resp = await _client.SendAsync(requestMessage);
+                var resp = await client.SendAsync(requestMessage);
                 if (!resp.IsSuccessStatusCode)
                 {
                     return resp.ReasonPhrase;
@@ -316,7 +368,7 @@ namespace Downloader.Util
                 requestMessage.Content = new StringContent(payloadStr,
                     Encoding.UTF8);
 
-                var resp = await _client.SendAsync(requestMessage);
+                var resp = await client.SendAsync(requestMessage);
                 if (!resp.IsSuccessStatusCode)
                 {
                     return resp.ReasonPhrase;
@@ -328,7 +380,7 @@ namespace Downloader.Util
 
         public static async Task<string> GetStr(string url, CancellationToken cancelToken = default(CancellationToken))
         {
-            var req = await _client.GetAsync(url, cancelToken);
+            var req = await client.GetAsync(url, cancelToken);
             if (!req.IsSuccessStatusCode)
             {
                 return req.ReasonPhrase;
@@ -354,7 +406,7 @@ namespace Downloader.Util
             }
 
 
-            var resp = await _client.SendAsync(requestMessage, cancelToken);
+            var resp = await client.SendAsync(requestMessage, cancelToken);
             return resp;
         }
 
@@ -375,7 +427,7 @@ namespace Downloader.Util
                 }
 
 
-                var resp = await _client.SendAsync(requestMessage);
+                var resp = await client.SendAsync(requestMessage);
                 if (!resp.IsSuccessStatusCode)
                 {
                     return resp.ReasonPhrase;
@@ -406,11 +458,13 @@ namespace Downloader.Util
                         req.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
                     }
                 }
-                var response = await _client.SendAsync(req);
+                var response = await client.SendAsync(req);
+
                 var parallelDownloadSuported = response.Headers.AcceptRanges.Contains("bytes");
                 var contentLength = response.Content.Headers.ContentLength ?? 0;
 
-                if(parallelDownloadSuported)
+                Debug.WriteLine(contentLength);
+                if (parallelDownloadSuported)
                 {
                     const double numberOfParts = 100;
                     var tasks = new List<Task>();
@@ -451,7 +505,7 @@ namespace Downloader.Util
 
 
                 fileStream.Position = start;
-                await _client.SendAsync(message).Result.Content.CopyToAsync(fileStream);
+                await client.SendAsync(message).Result.Content.CopyToAsync(fileStream);
 
                 message.Dispose();
             }
@@ -495,7 +549,7 @@ namespace Downloader.Util
 
                 try
                 {
-                    var resp = await _client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancelToken);
+                    var resp = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancelToken);
                     if (!resp.IsSuccessStatusCode)
                     {
                         Debug.WriteLine("ERROR in Requests: " + resp.StatusCode);
@@ -528,7 +582,7 @@ namespace Downloader.Util
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("ERROR in Requests: " + e.StackTrace);
+                    Debug.WriteLine("ERROR in Requests: " + e);
                     //await Task.Delay(2000);
                     //await DownloadFileFromUrl(url, path, headers, fileName, ++retries);
                 }

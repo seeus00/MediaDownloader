@@ -73,10 +73,11 @@ namespace WpfDownloader.Sites
 
                     string thumbnailUrl = _data["hentai_video"]["poster_url"].Value;
                     string storyboardUrl = _data["hentai_video_storyboards"].First()["url"].Value;
+
                     await Requests.DownloadFileFromUrl(thumbnailUrl, newPath, fileName: $"{slug}-thumbnail");
                     await Requests.DownloadFileFromUrl(storyboardUrl, newPath, fileName: $"{slug}-storyboard");
 
-                    //await Requests.DownloadFileFromUrl(coverUrl, newPath, fileName: slug);
+                    await Requests.DownloadFileFromUrl(coverUrl, newPath, fileName: slug);
                     await Requests.DownloadFileFromUrl(m3u8Url, newPath, fileName: slug);
                     await VideoConverter.M3u8ToMp4(m3u8Path, mp4Path, entry);
 

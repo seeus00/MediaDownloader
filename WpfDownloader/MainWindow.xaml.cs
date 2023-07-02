@@ -30,13 +30,43 @@ using System.Drawing;
 using WpfDownloader.Util;
 using Org.BouncyCastle.Asn1.Cms;
 using System.Reflection.Metadata;
+using System.Security.Authentication;
+using System.Net.Security;
 
 namespace WpfDownloader
 {
     public partial class MainWindow : MetroWindow
     {
+
+        // The enum flag for DwmSetWindowAttribute's second parameter, which tells the function what attribute to set.
+        // Copied from dwmapi.h
+        public enum DWMWINDOWATTRIBUTE
+        {
+            DWMWA_WINDOW_CORNER_PREFERENCE = 33
+        }
+
+        // The DWM_WINDOW_CORNER_PREFERENCE enum for DwmSetWindowAttribute's third parameter, which tells the function
+        // what value of the enum to set.
+        // Copied from dwmapi.h
+        public enum DWM_WINDOW_CORNER_PREFERENCE
+        {
+            DWMWCP_DEFAULT = 0,
+            DWMWCP_DONOTROUND = 1,
+            DWMWCP_ROUND = 2,
+            DWMWCP_ROUNDSMALL = 3
+        }
+
+        // Import dwmapi.dll and define DwmSetWindowAttribute in C# corresponding to the native function.
+        [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+        internal static extern void DwmSetWindowAttribute(IntPtr hwnd,
+                                                         DWMWINDOWATTRIBUTE attribute,
+                                                         ref DWM_WINDOW_CORNER_PREFERENCE pvAttribute,
+                                                         uint cbAttribute);
+
+
         private static readonly string CONFIG_PATH =
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Downloader";
+
 
         private static readonly string URLS_FILE_PATH = CONFIG_PATH + "/list.txt";
         private static readonly string ERROR_FILE_PATH = CONFIG_PATH + "/errors.log";
@@ -48,7 +78,7 @@ namespace WpfDownloader
             new SiteInfo() { ClassName="FourChan", Domains="boards\\.4channel\\.org\\/.*?\\/thread\\/[0-9]*,boards\\.4chan\\.org\\/.*?\\/thread\\/[0-9]*" },
             new SiteInfo() { ClassName="Danbooru", Domains="danbooru\\.donmai\\.us" },
             new SiteInfo() { ClassName="Gelbooru", Domains="gelbooru\\.com" },
-            new SiteInfo() { ClassName="Nhentai",  Domains="nhentai\\.net\\/g\\/[0-9]+"},
+            new SiteInfo() { ClassName="Nhentai",  Domains="nhentai\\.net\\/g\\/[0-9]+,nhentai\\.net\\/artist"},
             new SiteInfo() { ClassName="Pixiv",  Domains="pixiv\\.net\\/en\\/users"},
             new SiteInfo() { ClassName="Hanime",  Domains="hanime\\.tv"},
             new SiteInfo() { ClassName="Hitomi",  Domains="hitomi\\.la"},
@@ -72,8 +102,11 @@ namespace WpfDownloader
             new SiteInfo() { ClassName="HentaiMama",  Domains="hentaimama\\.io\\/tvshows"},
             new SiteInfo() { ClassName="Hiperdex",  Domains="hiperdex\\.com\\/manga"},
             new SiteInfo() { ClassName="Rule34",  Domains="rule34\\.xxx\\/index\\.php\\?page=post&s=list&tags="},
-            new SiteInfo() { ClassName="Youtube",  Domains="youtube\\.com\\/watch\\?v=,reddit.com\\/r\\/.*?\\/comments\\/.*?\\/.*?"},
+            new SiteInfo() { ClassName="Youtube",  Domains="youtube\\.com,reddit.com\\/r\\/.*?\\/comments\\/.*?\\/.*?"},
             new SiteInfo() { ClassName="JavGuru",  Domains="jav\\.guru"},
+            new SiteInfo() { ClassName="KskMoe",  Domains="ksk\\.moe"},
+            new SiteInfo() { ClassName="Avjoa",  Domains="avjoa[0-9]+"},
+            new SiteInfo() { ClassName="Bato",  Domains="bato\\.to\\/series\\/[0-9]+"},
             new SiteInfo() { ClassName="Test",  Domains="test"},
         };
 
@@ -111,8 +144,8 @@ namespace WpfDownloader
         {
             InitializeComponent();
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls13;
 
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             _urlEntries = new ObservableCollection<UrlEntry>();
             _startingEntries = new ConcurrentDictionary<Site, UrlEntry>();
@@ -139,7 +172,12 @@ namespace WpfDownloader
                  }
              };
 
-           
+            IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
+            var attribute = DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE;
+            var preference = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+            DwmSetWindowAttribute(hWnd, attribute, ref preference, sizeof(uint));
+
+
             //_notifyIcon = new System.Windows.Forms.NotifyIcon();
             //_notifyIcon.Icon = new System.Drawing.Icon("../../../res/icon.ico");
             //_notifyIcon.Visible = true;

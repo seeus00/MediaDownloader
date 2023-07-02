@@ -25,8 +25,8 @@ namespace WpfDownloader.Sites
         private static readonly List<Tuple<string, string>> HEADERS =
            new List<Tuple<string, string>>()
            {
-                new Tuple<string, string>("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36 Edg/99.0.1150.55"),
-                new Tuple<string, string>("Referer", "https://danbooru.donmai.us/")
+                new Tuple<string, string>("User-Agent", MainWindow.PERSONAL_CONFIG["user_agent"]),
+                new Tuple<string, string>("Referer", "danbooru.donmai.us"),
            };
         
         private static readonly string NOTES_API = "https://danbooru.donmai.us/notes.json?group_by=note&search[post_id]={0}";
@@ -74,8 +74,11 @@ namespace WpfDownloader.Sites
                 var baseAddress = new Uri("https://danbooru.donmai.us/");
                 _cookieContainer = new CookieContainer();
 
+                var cookies1 = ChromeCookies.GetCookies(".donmai.us");
+                var cookies2 = ChromeCookies.GetCookies("danbooru.donmai.us");
+
                 _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies(".donmai.us"));
-                _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies("danbooru.donmai.us"));
+                _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies(".danbooru.donmai.us"));
                 Requests.AddCookies(_cookieContainer, baseAddress);
             }
 
@@ -92,9 +95,11 @@ namespace WpfDownloader.Sites
                 var jsonUrl = $"https://danbooru.donmai.us/posts.json?tags={_escTags}&page={currPg}";
                 var req = await Requests.GetReq(jsonUrl, cancelToken: entry.CancelToken);
 
-                var data = JsonParser.Parse(await req.Content.ReadAsStringAsync());
-                if (!data.Any()) break;
+                string jsonStr = await req.Content.ReadAsStringAsync();
+                if (string.IsNullOrEmpty(jsonStr)) break;
 
+                var data = JsonParser.Parse(jsonStr);
+                if (!data.Any()) break;
 
                 var posts = data.Where(post => post["file_url"] != null && post["tag_string"] != null);
 

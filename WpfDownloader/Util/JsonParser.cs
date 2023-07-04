@@ -168,7 +168,7 @@ public static class JsonParser
             {
                 if (!string.IsNullOrEmpty(child.Name) && !string.IsNullOrEmpty(child.Value))
                 {
-                    if (child.Value == "true" || child.Value == "false" || child.Value == "null")
+                    if (child.Value == "true" || child.Value == "false" || child.Value == "null" || int.TryParse(child.Value, out _))
                     {
                         jsonStr.Append($"\"{child.Name}\":{child.Value}");
                     }else
@@ -200,7 +200,7 @@ public static class JsonParser
             {
                 if (string.IsNullOrEmpty(child.Name) && !string.IsNullOrEmpty(child.Value))
                 {
-                    if (child.Value == "true" || child.Value == "false" || child.Value == "null")
+                    if (child.Value == "true" || child.Value == "false" || child.Value == "null" || int.TryParse(child.Value, out _))
                     {
                         jsonStr.Append($"{child.Value}");
                     }

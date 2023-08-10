@@ -32,6 +32,8 @@ using Org.BouncyCastle.Asn1.Cms;
 using System.Reflection.Metadata;
 using System.Security.Authentication;
 using System.Net.Security;
+using WpfDownloader.Config;
+using WpfDownloader.Util.UserAgent;
 
 namespace WpfDownloader
 {
@@ -64,21 +66,22 @@ namespace WpfDownloader
                                                          uint cbAttribute);
 
 
-        private static readonly string CONFIG_PATH =
+        public static readonly string CONFIG_PATH =
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Downloader";
 
 
         private static readonly string URLS_FILE_PATH = CONFIG_PATH + "/list.txt";
         private static readonly string ERROR_FILE_PATH = CONFIG_PATH + "/errors.log";
         private static readonly string SUMMARY_FILE_PATH = CONFIG_PATH + "/summary.log";
-        private static readonly string CONFIGURATION_PATH = CONFIG_PATH + "/config.txt";
+        
 
         private static readonly SiteInfo[] SITES =
         {
             new SiteInfo() { ClassName="FourChan", Domains="boards\\.4channel\\.org\\/.*?\\/thread\\/[0-9]*,boards\\.4chan\\.org\\/.*?\\/thread\\/[0-9]*" },
             new SiteInfo() { ClassName="Danbooru", Domains="danbooru\\.donmai\\.us" },
+            new SiteInfo() { ClassName="SafeBooru", Domains="safebooru\\.org" },
             new SiteInfo() { ClassName="Gelbooru", Domains="gelbooru\\.com" },
-            new SiteInfo() { ClassName="Nhentai",  Domains="nhentai\\.net\\/g\\/[0-9]+,nhentai\\.net\\/artist"},
+            new SiteInfo() { ClassName="Nhentai",  Domains="nhentai\\.net\\/g\\/[0-9]+,nhentai\\.net\\/artist,nhentai\\.net\\/group"},
             new SiteInfo() { ClassName="Pixiv",  Domains="pixiv\\.net\\/en\\/users"},
             new SiteInfo() { ClassName="Hanime",  Domains="hanime\\.tv"},
             new SiteInfo() { ClassName="Hitomi",  Domains="hitomi\\.la"},
@@ -111,9 +114,6 @@ namespace WpfDownloader
         };
 
         private static readonly SemaphoreSlim _slim = new SemaphoreSlim(2);
-
-        public static readonly Dictionary<string, string> PERSONAL_CONFIG =
-            new Dictionary<string, string>();
 
         private static MainWindow openWindow = null;
 
@@ -221,25 +221,15 @@ namespace WpfDownloader
                 if (!File.Exists(URLS_FILE_PATH)) using (File.Create(URLS_FILE_PATH)) { }
                 if (!File.Exists(ERROR_FILE_PATH)) using (File.Create(ERROR_FILE_PATH)) { }
                 if (!File.Exists(SUMMARY_FILE_PATH)) using (File.Create(SUMMARY_FILE_PATH)) { }
-                if (!File.Exists(CONFIGURATION_PATH)) using (File.Create(CONFIGURATION_PATH)) { }
+
+                await ConfigManager.ReadConfigurationFile();
+                await UserAgentUtil.InitUserAgent();     
 
                 _urlListView.Background = SystemParameters.WindowGlassBrush;
                 //_urlListView.Background = Background;
 
-                await ReadConfigurationFile();
 
                 openWindow = this;
-            }
-        }
-
-
-        private async Task ReadConfigurationFile()
-        {
-            var lines = await File.ReadAllLinesAsync(CONFIGURATION_PATH);
-            foreach (string line in lines)
-            {
-                var split = line.Split("=");
-                PERSONAL_CONFIG.Add(split[0], split[1]);
             }
         }
 

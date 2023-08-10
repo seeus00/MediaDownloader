@@ -12,8 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using WpfDownloader.Config;
 using WpfDownloader.Util;
 using WpfDownloader.Util.Database;
+using WpfDownloader.Util.UserAgent;
 using WpfDownloader.WpfData;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
@@ -61,13 +63,13 @@ namespace WpfDownloader.Sites
                 _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies(".nhentai.net"));
                 Requests.AddCookies(_cookieContainer, baseAddress);
 
-                string userAgent = MainWindow.PERSONAL_CONFIG["user_agent"];
+                string userAgent = UserAgentUtil.CURR_USER_AGENT;
 
                 HEADERS.Add(new Tuple<string, string>("User-Agent", string.IsNullOrEmpty(userAgent) ? "" : userAgent));
             }
 
             var path = Url.Split('/')[3];
-            if (path != "artist")
+            if (path != "artist" && path != "group")
             {
                 entry.StatusMsg = "Retrieving";
                 entry.Name = $"[Nhentai] " + _code;
@@ -88,7 +90,7 @@ namespace WpfDownloader.Sites
                 entry.StatusMsg = "Retrieving codes";
 
                 string artist = Url.Split('/').Last();
-                string query = $"https://nhentai.net/search/?q=artist:{artist}+language:english";
+                string query = $"https://nhentai.net/search/?q={path}:{artist}+language:english";
 
                 var galleryCodes = new List<string>();
                 int currPg = 1;

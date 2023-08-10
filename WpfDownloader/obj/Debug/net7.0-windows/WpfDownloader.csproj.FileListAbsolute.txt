@@ -51,7 +51,6 @@ C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\Mono.Nat.dll
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\MonoTorrent.dll
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\MySql.Data.dll
-C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\ZstdNet.dll
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\Newtonsoft.Json.dll
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\Npgsql.dll
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\BouncyCastle.Crypto.dll
@@ -124,3 +123,12 @@ C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\obj\Debug\net7.0-
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\obj\Debug\net7.0-windows\WpfDownloader.pdb
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\obj\Debug\net7.0-windows\WpfDownloader.genruntimeconfig.cache
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\obj\Debug\net7.0-windows\ref\WpfDownloader.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\System.IO.Pipelines.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\System.Security.Cryptography.ProtectedData.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\ZstdSharp.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\runtimes\win-x64\native\comerr64.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\runtimes\win-x64\native\gssapi64.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\runtimes\win-x64\native\k5sprt64.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\runtimes\win-x64\native\krb5_64.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\runtimes\win-x64\native\krbcc64.dll
+C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\bin\Debug\net7.0-windows\runtimes\linux-ppc64le\native\libe_sqlite3.so

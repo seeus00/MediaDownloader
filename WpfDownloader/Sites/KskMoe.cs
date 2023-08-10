@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Shell;
 using WpfDownloader.Util.HttpExtensions;
+using WpfDownloader.Util.UserAgent;
 using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
@@ -29,7 +30,7 @@ namespace WpfDownloader.Sites
         private static readonly List<Tuple<string, string>> HEADERS =
            new List<Tuple<string, string>>()
            {
-                new Tuple<string, string>("User-Agent", MainWindow.PERSONAL_CONFIG["user_agent"]),
+                new Tuple<string, string>("User-Agent", UserAgentUtil.CURR_USER_AGENT),
                 new Tuple<string, string>("Origin", "https://ksk.moe"),
                 new Tuple<string, string>("Host", "ksk.moe"),
            };
@@ -60,10 +61,11 @@ namespace WpfDownloader.Sites
 
             var hashes = new Regex("name=\"hash\" value=\"(.*?)\"", RegexOptions.Singleline)
                 .Matches(html)
-                .Select(match => match.Groups[1].Value.Trim());
+                .Select(match => match.Groups[1].Value.Trim())
+                .ToList();
 
             //First hash if for the original, second is for resampled 
-            string hash = hashes.First();
+            string hash = hashes[1];
             string postUrl = $"https://ksk.moe/download/{downloadId}";
 
             var titles = new Regex("id=\"metadata\".*?<h[0-9]+>(.*?)<.*?<h[0-9]+>(.*?)<", RegexOptions.Singleline)
@@ -84,32 +86,32 @@ namespace WpfDownloader.Sites
                 .Matches(html)
                 .Select(match => HttpUtility.HtmlDecode(match.Groups[1].Value.Trim())));
 
-            var thumbnailUrls = new Regex("\\/read.*?img.*?src=\"(.*?)\"", RegexOptions.Singleline)
-                .Matches(html)
-                .Select(match => HttpUtility.HtmlDecode(match.Groups[1].Value.Trim())).Skip(1);
+            //var thumbnailUrls = new Regex("\\/read.*?img.*?src=\"(.*?)\"", RegexOptions.Singleline)
+            //    .Matches(html)
+            //    .Select(match => HttpUtility.HtmlDecode(match.Groups[1].Value.Trim())).Skip(1);
 
-            var fullImgUrls = new List<string>();
-            foreach (string thumbnailUrl in thumbnailUrls)
-            {
-                var split = thumbnailUrl.Split('/');
-                string fileName = split.Last();
-                string baseDomain = string.Join('/', split.Take(3));
+            //var fullImgUrls = new List<string>();
+            //foreach (string thumbnailUrl in thumbnailUrls)
+            //{
+            //    var split = thumbnailUrl.Split('/');
+            //    string fileName = split.Last();
+            //    string baseDomain = string.Join('/', split.Take(3));
 
-                string newUrl = $"{baseDomain}/original/{downloadId}/{fileName}";
-                fullImgUrls.Add(newUrl);
-            }
+            //    string newUrl = $"{baseDomain}/original/{downloadId}/{fileName}";
+            //    fullImgUrls.Add(newUrl);
+            //}
 
             string currPath = $"{DEFAULT_PATH}/KskMoe/{RemoveIllegalChars(title)}";
             if (!Directory.Exists(currPath)) Directory.CreateDirectory(currPath);
 
 
             entry.DownloadPath = currPath;
-            await DownloadUtil.DownloadAllUrls(fullImgUrls, currPath, entry, fileNameNumber: true);
+            //await DownloadUtil.DownloadAllUrls(fullImgUrls, currPath, entry, fileNameNumber: true);
 
 
-            /*
+
             entry.StatusMsg = "Retrieving ZIP";
-            
+
             var data = new List<KeyValuePair<string, string>>()
             {
                 new KeyValuePair<string, string>("hash", hash)
@@ -133,7 +135,7 @@ namespace WpfDownloader.Sites
             entry.StatusMsg = "Deleting ZIP";
             await Task.Run(() => File.Delete(zipPath));
 
-            
+
 
             entry.StatusMsg = "Renaming files";
             //Rename files 
@@ -146,7 +148,7 @@ namespace WpfDownloader.Sites
 
                 pg++;
             }
-            */
+
             entry.StatusMsg = "Finished";
         }
     }

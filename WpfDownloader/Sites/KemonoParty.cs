@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WpfDownloader.Util.StringHelpers;
 using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
@@ -82,9 +83,9 @@ namespace WpfDownloader.Sites
                 .TrimEnd('\n');          
             var creatorData = JsonParser.Parse(creatorsText);
 
-            _userName = creatorData
+            _userName = UnicodeUtil.DecodeEncodedNonAsciiCharacters(creatorData
                 .Where(creator => creator["id"].Value == _userId)
-                .Select(creator => creator["name"].Value).FirstOrDefault("");
+                .Select(creator => creator["name"].Value).FirstOrDefault(""));
 
             entry.Name = $"[{_domain}] " + _userName;
 

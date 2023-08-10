@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using WpfDownloader.Util;
+using WpfDownloader.Util.UserAgent;
 using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
@@ -20,7 +21,7 @@ namespace WpfDownloader.Sites
             new List<Tuple<string, string>>()
             {
 
-                new Tuple<string, string>("User-Agent", MainWindow.PERSONAL_CONFIG["user_agent"]),
+                new Tuple<string, string>("User-Agent", UserAgentUtil.CURR_USER_AGENT),
                 new Tuple<string, string>("Referer", "https://avjoa47.com/"),
                 new Tuple<string, string>("Accept-Encoding", "identity"),
                 new Tuple<string, string>("Host", "cdn.sdh239sd356sdg.com"),

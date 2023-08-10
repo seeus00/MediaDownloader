@@ -14,6 +14,7 @@ using System.Web;
 using WpfDownloader.Data.Captions;
 using WpfDownloader.Util;
 using WpfDownloader.Util.Database;
+using WpfDownloader.Util.UserAgent;
 using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
@@ -25,7 +26,7 @@ namespace WpfDownloader.Sites
         private static readonly List<Tuple<string, string>> HEADERS =
            new List<Tuple<string, string>>()
            {
-                new Tuple<string, string>("User-Agent", MainWindow.PERSONAL_CONFIG["user_agent"]),
+                new Tuple<string, string>("User-Agent", UserAgentUtil.CURR_USER_AGENT),
                 new Tuple<string, string>("Referer", "danbooru.donmai.us"),
            };
         

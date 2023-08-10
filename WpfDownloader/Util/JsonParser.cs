@@ -247,11 +247,9 @@ public class JObject
             {
                 if (_jsonStr[_ind] == '\\')
                 {
+                    strBuilder.Append(_jsonStr[_ind]);
                     strBuilder.Append(_jsonStr[++_ind]);
                     continue;
-                }else if (_jsonStr[_ind] == '/')
-                {
-
                 }
 
                 strBuilder.Append(_jsonStr[_ind]);
@@ -285,6 +283,8 @@ public class JObject
         for (_ind = 1; _ind < len; _ind++)
         {
             char currChar = _jsonStr[_ind];
+            if (stack.Count == 0) break;
+
             var last = stack.Peek();
 
             switch (currChar)

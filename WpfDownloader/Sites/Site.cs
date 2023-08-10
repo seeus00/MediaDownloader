@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WpfDownloader.Config;
 using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
 {
     public abstract class Site
     {
-        public static string DEFAULT_PATH = MainWindow.PERSONAL_CONFIG.ContainsKey("default_path") ?
-             MainWindow.PERSONAL_CONFIG["default_path"] : 
+        public static string DEFAULT_PATH = ConfigManager.PERSONAL_CONFIG.ContainsKey("default_path") ?
+             ConfigManager.PERSONAL_CONFIG["default_path"] : 
              Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
         private string _url;

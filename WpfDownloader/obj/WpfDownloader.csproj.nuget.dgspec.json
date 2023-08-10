@@ -42,47 +42,47 @@
           "dependencies": {
             "JavaScriptEngineSwitcher.V8": {
               "target": "Package",
-              "version": "[3.20.7, )"
+              "version": "[3.21.3, )"
             },
             "Magick.NET-Q16-AnyCPU": {
               "target": "Package",
-              "version": "[12.2.1, )"
+              "version": "[13.1.3, )"
             },
             "MahApps.Metro": {
               "target": "Package",
-              "version": "[2.4.9, )"
+              "version": "[2.4.10, )"
             },
             "Microsoft.ClearScript.V8.Native.win-x64": {
               "target": "Package",
-              "version": "[7.3.5, )"
+              "version": "[7.4.2, )"
             },
             "Microsoft.Data.Sqlite.Core": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.9, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.9, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.9, )"
             },
             "MonoTorrent": {
               "target": "Package",
-              "version": "[2.0.6, )"
+              "version": "[2.0.7, )"
             },
             "MySql.Data": {
               "target": "Package",
-              "version": "[8.0.31, )"
+              "version": "[8.1.0, )"
             },
             "Npgsql": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.4, )"
             },
             "System.Security.Cryptography.ProtectedData": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.1, )"
             },
             "WPF-UI": {
               "target": "Package",

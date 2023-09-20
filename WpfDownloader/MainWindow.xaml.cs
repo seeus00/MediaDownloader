@@ -109,7 +109,7 @@ namespace WpfDownloader
             new SiteInfo() { ClassName="JavGuru",  Domains="jav\\.guru"},
             new SiteInfo() { ClassName="KskMoe",  Domains="ksk\\.moe"},
             new SiteInfo() { ClassName="Avjoa",  Domains="avjoa[0-9]+"},
-            new SiteInfo() { ClassName="Bato",  Domains="bato\\.to\\/series\\/[0-9]+"},
+            new SiteInfo() { ClassName="Bato",  Domains="bato\\.to\\/series\\/[0-9]+,mangatoto.com\\/series\\/[0-9]+"},
             new SiteInfo() { ClassName="Test",  Domains="test"},
         };
 

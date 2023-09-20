@@ -7,8 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using WpfDownloader.Util.StringHelpers;
 using WpfDownloader.WpfData;
 
@@ -16,9 +19,10 @@ namespace WpfDownloader.Sites
 {
     public class KemonoParty : Site
     {
-        private static readonly string POSTS_API = "https://{0}.party/api/{1}/user/{2}?o={3}";
-        private static readonly string CREATOR_API = "https://{0}.party/api/creators";
-        private static readonly int DEFAULT_POST_LIMIT = 25;
+        private const string POST_API = "https://{0}.party/api/{1}/user/{2}/post/{3}";
+        private const string POSTS_API = "https://{0}.party/api/{1}/user/{2}?o={3}";
+        private const string CREATOR_API = "https://{0}.party/api/creators";
+        private const int DEFAULT_POST_LIMIT = 25;
 
         private static readonly List<Tuple<string, string>> HEADERS =
             new List<Tuple<string, string>>
@@ -32,68 +36,145 @@ namespace WpfDownloader.Sites
             new Tuple<string, string>("Accept-Encoding", "br")
         };
 
-        private static CookieContainer _cookieContainer = null;
+        private static CookieContainer cookieContainer = null;
 
-        private string _domain;
-        private string _service;
-        private string _userId;
-        private string _userName;
+        private string domain;
+        private string service;
+        private string userId;
+        private string userName;
+
+        private string newPath;
 
         public KemonoParty(string url, string args) : base(url, args)
         {
             var split = url.Split('/');
-            _domain = split[2].Split('.')[0];
-            _service = split[3];
-            _userId = split.Last();
+            domain = split[2].Split('.')[0];
+            service = split[3];
+            userId = split[5];
         }
 
         public override async Task DownloadAll(UrlEntry entry)
         {
             entry.StatusMsg = "Retrieving";
-            entry.Name = $"[{_domain}] " + _userId;
-            var mediaUrls = await GetMediaUrls(entry);
+            entry.Name = $"[{domain}] " + userId;
 
-            var newPath = $"{DEFAULT_PATH}/{_domain}/{_userName}";
+            if (cookieContainer == null)
+            {
+                var baseAddress = new Uri($"https://www.{domain}.party/");
+                cookieContainer = new CookieContainer();
+
+                cookieContainer.Add(baseAddress, ChromeCookies.GetCookies($".{domain}.party"));
+                Requests.AddCookies(cookieContainer, baseAddress);
+            }
 
             if (IMG_HEADERS.Count < 3)
-                IMG_HEADERS.Add(new Tuple<string, string>("referer", $"https://{_domain}.party"));
-            
-            await DownloadUtil.DownloadAllUrls(mediaUrls, newPath, entry, headers: IMG_HEADERS);
+                IMG_HEADERS.Add(new Tuple<string, string>("referer", $"https://{domain}.party"));
+
+            if (Url.Contains("post"))
+            {
+                await DownloadSinglePost(entry);
+            }else
+            {
+                var mediaUrls = await GetMediaUrls(entry);
+
+                newPath = $"{DEFAULT_PATH}/{domain}/{userName}";
+                await DownloadUtil.DownloadAllUrls(mediaUrls, newPath, entry, headers: IMG_HEADERS);
+            }
+
+            entry.StatusMsg = (entry.CancelToken.IsCancellationRequested) ? "Cancelled" : "Finished";
         }
+
+
+        public async Task DownloadSinglePost(UrlEntry entry)
+        {
+            string creatorsText = (await Requests.GetStr(string.Format(CREATOR_API, domain)))
+                .TrimEnd('\n');
+            var creatorData = JsonParser.Parse(creatorsText);
+
+            userName = UnicodeUtil.DecodeEncodedNonAsciiCharacters(creatorData
+                .Where(creator => creator["id"].Value == userId)
+                .Select(creator => creator["name"].Value).FirstOrDefault(""));
+
+            newPath = $"{DEFAULT_PATH}/{domain}/{userName}";
+            entry.Name = $"[{domain}] " + userName;
+
+            string postId = Url.Split('/').Last();
+
+            string getUrl = string.Format(POST_API, domain, service, userId, postId);
+            //Strip newline at end of string
+            string jsonStr = (await Requests.GetStr(getUrl, HEADERS))
+                .TrimEnd('\n');
+
+            var data = JsonParser.Parse(jsonStr);
+            if (!data.Any())
+                return;
+
+
+            var mediaUrls = new List<string>();
+            var post = data.First();
+            if (!post["attachments"].IsEmpty())
+            {
+                mediaUrls.AddRange(post["attachments"].Select(attach =>
+                    $"https://{domain}.party/data{attach["path"].Value}?f={attach["name"].Value}"
+                ));
+            }
+            if (!post["file"].IsEmpty())
+            {
+                var file = post["file"];
+                mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].Value}?f={post["file"]["name"].Value}");
+            }
+
+            entry.StatusMsg = "Downloading Imgs";
+            await DownloadUtil.DownloadAllUrls(mediaUrls, newPath, entry, headers: IMG_HEADERS, showProgress: false);
+
+            var urls = new Regex("href=\\\\\"(.*?)\\\\\"")
+                .Matches(post["content"].Value)
+                .Select(match => match.Groups[1].Value);
+
+            entry.StatusMsg = "Downloading video urls";
+            int ind = 0;
+            foreach (string url in urls)
+            {
+                if (url.Contains("vimeo"))
+                {
+                    var getResp = await Requests.Get(url);
+
+                    string redirectUrl = getResp.RequestMessage.RequestUri.ToString();
+                    await VideoConverter.DownloadYoutubeVideo(redirectUrl, newPath, Args, entry, showProgress: false);
+                }
+
+               
+                ind++;
+
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    entry.Bar.Value = ind / urls.Count() * 100.0;
+                }), DispatcherPriority.ContextIdle);
+            }
+        }
+
+
 
         //For some reason, the kemono + coomer party api appends a newline character
         //at the end of the string. The trimEnd removes it in order for it to be 
         //properly parsed by my json parser
         public async Task<IEnumerable<string>> GetMediaUrls(UrlEntry entry)
         {
-            if (_cookieContainer == null)
-            {
-                var baseAddress = new Uri($"https://www.{_domain}.party/");
-                _cookieContainer = new CookieContainer();
-
-                _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies($".{_domain}.party"));
-                Requests.AddCookies(_cookieContainer, baseAddress);
-
-                var cookies = _cookieContainer.GetCookies(baseAddress);
-            }
-
-            
-
-            string creatorsText = (await Requests.GetStr(string.Format(CREATOR_API, _domain)))
+            string creatorsText = (await Requests.GetStr(string.Format(CREATOR_API, domain)))
                 .TrimEnd('\n');          
             var creatorData = JsonParser.Parse(creatorsText);
 
-            _userName = UnicodeUtil.DecodeEncodedNonAsciiCharacters(creatorData
-                .Where(creator => creator["id"].Value == _userId)
+            userName = UnicodeUtil.DecodeEncodedNonAsciiCharacters(creatorData
+                .Where(creator => creator["id"].Value == userId)
                 .Select(creator => creator["name"].Value).FirstOrDefault(""));
 
-            entry.Name = $"[{_domain}] " + _userName;
+            entry.Name = $"[{domain}] " + userName;
 
             var mediaUrls = new List<string>();
             int currPg = 0;
             while (true)
             {
-                string getUrl = string.Format(POSTS_API, _domain, _service, _userId, currPg);
+                string getUrl = string.Format(POSTS_API, domain, service, userId, currPg);
                 //Strip newline at end of string
                 string jsonStr = (await Requests.GetStr(getUrl, HEADERS))
                     .TrimEnd('\n');
@@ -108,13 +189,13 @@ namespace WpfDownloader.Sites
                     if (!post["attachments"].IsEmpty())
                     {
                         mediaUrls.AddRange(post["attachments"].Select(attach => 
-                            $"https://{_domain}.party/data{attach["path"].Value}?f={attach["name"].Value}"
+                            $"https://{domain}.party/data{attach["path"].Value}?f={attach["name"].Value}"
                         ));
                     }
                     if (!post["file"].IsEmpty())
                     {
                         var file = post["file"];
-                        mediaUrls.Add($"https://{_domain}.party/data{post["file"]["path"].Value}?f={post["file"]["name"].Value}");
+                        mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].Value}?f={post["file"]["name"].Value}");
                     }
                 }
 

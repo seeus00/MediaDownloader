@@ -214,6 +214,34 @@ namespace Downloader.Util
             }
         }
 
+        public static async Task<HttpResponseMessage> Get(string url, JDict payload = null, List<Tuple<string, string>> headers = null,
+           CancellationToken cancelToken = default(CancellationToken))
+        {
+            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
+            {
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        if (requestMessage.Headers.Contains(header.Item1))
+                        {
+                            requestMessage.Headers.Remove(header.Item1);
+                        }
+                        requestMessage.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
+                    }
+                }
+
+                if (payload != null)
+                {
+                    string payloadStr = JsonParser.Serialize(payload).ToString();
+                    requestMessage.Content = new StringContent(payloadStr,
+                        Encoding.UTF8, "application/json");
+                }
+
+                var resp = await client.SendAsync(requestMessage, cancelToken);
+                return resp;
+            }
+        }
 
         public static async Task<HttpResponseMessage> Get(string url, List<Tuple<string, string>> headers = null,
            CancellationToken cancelToken = default(CancellationToken))
@@ -520,21 +548,6 @@ namespace Downloader.Util
 
             if (retries > 10) return;
 
-            string ext = GetFileExtensionFromUrl(url);
-            fileName = (!string.IsNullOrEmpty(fileName)) ? fileName : GetFileNameFromUrl(url);
-            
-            //Don't add extension if the filename already has it
-            string currPath = (!fileName.EndsWith(ext)) ? $"{path}/{fileName}{ext}" : $"{path}/{fileName}";
-
-            //Rename duplicate file to: filename (1, 2, etc).ext
-            if (File.Exists(currPath))
-            {
-                return;
-                //if (duplicateFileName)
-                //{
-                //    currPath = DuplicateFilePath(currPath);
-                //}
-            }
 
             if (cancelToken.IsCancellationRequested) return;
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
@@ -550,10 +563,22 @@ namespace Downloader.Util
                 try
                 {
                     var resp = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancelToken);
+                    url = resp.RequestMessage.RequestUri.ToString();
+
+                    string ext = GetFileExtensionFromUrl(url);
+                    fileName = (!string.IsNullOrEmpty(fileName)) ? fileName : GetFileNameFromUrl(url);
+
+                    if (entry != null) entry.Name = fileName;
+
+                    //Don't add extension if the filename already has it
+                    string currPath = (!fileName.EndsWith(ext)) ? $"{path}/{fileName}{ext}" : $"{path}/{fileName}";
+
+                    //Rename duplicate file to: filename (1, 2, etc).ext
+                    if (File.Exists(currPath)) return;
+
                     if (!resp.IsSuccessStatusCode)
                     {
                         Debug.WriteLine("ERROR in Requests: " + resp.StatusCode);
-
                         return;
                     }
 

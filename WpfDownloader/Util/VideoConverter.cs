@@ -17,7 +17,8 @@ public static class VideoConverter
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36 Edg/102.0.1245.39";
 
 
-    public static async Task DownloadYoutubeVideo(string videoUrl, string videoPath, string args, UrlEntry entry)
+    public static async Task DownloadYoutubeVideo(string videoUrl, string videoPath, string args, UrlEntry entry, 
+        bool showProgress = true)
     {
         string arguments = string.Empty;
         switch (args)
@@ -51,53 +52,60 @@ public static class VideoConverter
         var registerResult = entry.CancelToken.Register(() => proc.Kill());
         proc.Start();
 
-        string standard_output;
-        while ((standard_output = await proc.StandardOutput.ReadLineAsync()) != null)
-        {
-            if (entry.CancelToken.IsCancellationRequested)
-            {
-                entry.StatusMsg = "Cancelled";
-                break;
-            }
-
-            if (standard_output.Contains("Destination"))
-            {
-                string title = new Regex("Destination:(.*?)\\.", RegexOptions.Singleline)
-                    .Match(standard_output).Groups[1].Value.Trim();
-
-                var dirName = new DirectoryInfo(title).Name;
-                entry.Name = dirName;
-                break;
-            }
-        }
+        string standard_output = null;
 
         while ((standard_output = await proc.StandardOutput.ReadLineAsync()) != null)
         {
+            Debug.WriteLine(standard_output);
             if (entry.CancelToken.IsCancellationRequested)
             {
                 entry.StatusMsg = "Cancelled";
+                proc.Kill();
                 break;
             }
 
-            if (standard_output.Contains("MiB"))
+            if (showProgress)
             {
-                string percentStr = new Regex("\\[download\\] (.*?)%", RegexOptions.Singleline)
-                    .Match(standard_output).Groups[1].Value;
-                percentStr = percentStr.Trim();
-
-                double percent = double.Parse(percentStr);
-
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                if (standard_output.Contains("Destination"))
                 {
-                    entry.Bar.Value = percent;
-                }), DispatcherPriority.ContextIdle);
+                    string title = new Regex("Destination:(.*?)\\.", RegexOptions.Singleline)
+                        .Match(standard_output).Groups[1].Value.Trim();
 
-                if (percent >= 100.0) break;
+                    var dirName = new DirectoryInfo(title).Name;
+                    entry.Name = dirName;
+                }
+
+                if (standard_output.Contains("[download]"))
+                {
+                    var matches = new Regex("frag (.*?)\\/(.*?)\\)").Match(standard_output);
+
+                    if (!matches.Success) continue;
+
+
+                    string firstVal = matches.Groups[1].Value.Trim();
+                    string secVal = matches.Groups[2].Value.Trim();
+
+                    if (!int.TryParse(firstVal, out _) || !int.TryParse(secVal, out _)) continue;
+
+                    int currFrag = int.Parse(firstVal);
+                    int totalFrags = int.Parse(secVal);
+
+                    double percent = currFrag / totalFrags * 100.0;
+
+
+                    if (percent <= 100)
+                    {
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            entry.Bar.Value = percent;
+                        }), DispatcherPriority.ContextIdle);
+                    }
+                }
             }
         }
-
-        await proc.WaitForExitAsync(entry.CancelToken);
-        proc.Close();
+        
+        //await proc.WaitForExitAsync(entry.CancelToken);
+        proc.Kill();
 
         registerResult.Dispose();
     }

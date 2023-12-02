@@ -38,7 +38,7 @@ namespace WpfDownloader.Sites
             string metaDataJson = await Requests.GetStr(string.Format(METADATA_API, _id));
             var metadata = JsonParser.Parse(metaDataJson);
 
-            _title = metadata["title"].Value;
+            _title = metadata["title"].ToString();
             entry.Name = _title;
 
             _newPath = $"{DEFAULT_PATH}/FakkuCC/{_title}";
@@ -46,7 +46,7 @@ namespace WpfDownloader.Sites
             //Write tags
             var info = new JDict();
             info["title"] = new JType(_title);
-            info["tags"] = new JArray(metadata["tags"].Value.Split(',').Select(tag => tag.Trim()));
+            info["tags"] = new JArray(metadata["tags"].ToString().Split(',').Select(tag => tag.Trim()));
 
             await TagWriter.WriteTags(info, _newPath);
 
@@ -55,8 +55,8 @@ namespace WpfDownloader.Sites
 
             return files["pages"].Select(url => new ImgData()
             {
-                Url = $"https://fakku.cc/{url.Value.Substring(1)}",
-                Filename = url.Value.Split("path=").Last()
+                Url = $"https://fakku.cc/{url.ToString().Substring(1)}",
+                Filename = url.ToString().Split("path=").Last()
             });
 
         }

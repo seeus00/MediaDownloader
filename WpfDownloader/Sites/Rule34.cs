@@ -73,7 +73,7 @@ namespace WpfDownloader.Sites
                 
 
                 //var matches = new Regex("file_url=\"(.*?)\"", RegexOptions.Singleline).Matches(data);
-                urls.AddRange(data.Select(post => post["file_url"].Value));
+                urls.AddRange(data.Select(post => post["file_url"].ToString()));
 
                 currPid++;
                 await Task.Delay(500);

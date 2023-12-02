@@ -70,7 +70,7 @@ namespace ChromeCookie
 
             return new Regex("Name=default-release.*Path=(.*?)$", 
                 RegexOptions.Singleline | RegexOptions.Multiline).
-                Match(data).Groups[1].Value.Trim();
+                Match(data).Groups[1].ToString().Trim();
         }
 
 
@@ -97,7 +97,7 @@ namespace ChromeCookie
             if (_key != null) return;
 
             var jsonStr = File.ReadAllText(localStatePath);
-            var encryptedKey = JsonParser.Parse(jsonStr)["os_crypt"]["encrypted_key"].Value;
+            var encryptedKey = JsonParser.Parse(jsonStr)["os_crypt"]["encrypted_key"].ToString();
 
             var baseKey = Convert.FromBase64String(encryptedKey);
             baseKey = new List<byte>(baseKey).Skip(5).ToArray();

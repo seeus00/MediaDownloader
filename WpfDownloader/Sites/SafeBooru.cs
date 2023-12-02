@@ -42,9 +42,9 @@ namespace WpfDownloader.Sites
 
                 var res = data.Select(obj => new ImgObj()
                 {
-                    ImgUrl = $"https://safebooru.org//images/{obj["directory"].Value}/{obj["image"].Value}",
-                    ImgName = obj["image"].Value.Split('.').First(),
-                    Tags = string.Join(',', obj["tags"].Value.Split())
+                    ImgUrl = $"https://safebooru.org//images/{obj["directory"].ToString()}/{obj["image"].ToString()}",
+                    ImgName = obj["image"].ToString().Split('.').First(),
+                    Tags = string.Join(',', obj["tags"].ToString().Split())
                 });
 
                 if (!res.Any()) break;

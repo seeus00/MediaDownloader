@@ -17,7 +17,7 @@ using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
 {
-    public struct Chapter
+    public struct BatoChapter
     {
         public string Title { get; set; }
         public string Url { get; set; }
@@ -30,7 +30,7 @@ namespace WpfDownloader.Sites
 
         }
 
-        public async Task DownloadChapterUrls(string path, UrlEntry entry, Chapter chapter)
+        public async Task DownloadChapterUrls(string path, UrlEntry entry, BatoChapter chapter)
         {
             string chapterPath = $"{path}/{RemoveIllegalChars(chapter.Title)}";
             if (!Directory.Exists(chapterPath)) Directory.CreateDirectory(chapterPath);
@@ -68,7 +68,7 @@ namespace WpfDownloader.Sites
 
             var chapters = new Regex("chap.*?href=\"(.*?)\" >.*?<b.*?>(.*?)<", RegexOptions.Singleline)
                 .Matches(html)
-                .Select(match => new Chapter()
+                .Select(match => new BatoChapter()
                 { 
                     Title = System.Net.WebUtility.HtmlDecode($@"{match.Groups[2].Value.Trim()}"),
                     Url = $"https://bato.to{match.Groups[1].Value}"

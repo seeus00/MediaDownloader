@@ -30,7 +30,7 @@ namespace WpfDownloader.Sites
         public override async Task DownloadAll(UrlEntry entry)
         {
             await UpdateData(_slug);
-            _seriesTitle = RemoveIllegalChars(_data["hentai_franchise"]["slug"].Value);
+            _seriesTitle = RemoveIllegalChars(_data["hentai_franchise"]["slug"].ToString());
 
             var newPath = $"{DEFAULT_PATH}/hanime/{_seriesTitle}";
 
@@ -39,7 +39,7 @@ namespace WpfDownloader.Sites
             var info = new JDict();
             info["title"] = new JType(_seriesTitle);
             info["tags"] = new JArray(
-                _data["hentai_tags"].Select(tag => tag["text"].Value));
+                _data["hentai_tags"].Select(tag => tag["text"].ToString()));
             await TagWriter.WriteTags(info, newPath);
 
             var slugs = new List<string>();
@@ -49,42 +49,59 @@ namespace WpfDownloader.Sites
             }else if (Args == "s")
             {
                 slugs.AddRange(_data["hentai_franchise_hentai_videos"]
-                    .Select(vid => vid["slug"].Value));
+                    .Select(vid => vid["slug"].ToString()));
             }
 
             entry.FilesMsg = $"0/{slugs.Count()}";
 
+            entry.StatusMsg = "Converting";
+            entry.Name = "[Hanime] " + _seriesTitle;
+
             int ind = 1;
             var semaphoreSlim = new SemaphoreSlim(2);
-            var tasks = slugs.Select(async slug =>
+            var tasks = slugs.Select(async (slug, i) =>
             {
                 if (entry.CancelToken.IsCancellationRequested) return;
 
                 await semaphoreSlim.WaitAsync();
                 try
                 {
-                    entry.StatusMsg = "Converting";
-                    entry.Name = "[Hanime] " + slug;
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        var currEntry = new UrlEntry()
+                        {
+                            StatusMsg = "Converting",
+                            Name = "[Hanime] " + slug,
+                        };
+
+                        entry.SubItems.Add(currEntry);
+                    });
+
 
                     var m3u8Url = await GetM3u8Url(slug);
-                    var m3u8Path = $"{newPath}/{slug}.m3u8";
-                    var mp4Path = $"{newPath}/{slug}.mp4";
-                    var coverUrl = _data["hentai_video"]["cover_url"].Value;
+                    //var m3u8Path = $"{newPath}/{slug}.m3u8";
+                    //var mp4Path = $"{newPath}/{slug}.mp4";
+                    var coverUrl = _data["hentai_video"]["cover_url"].ToString();
 
-                    string thumbnailUrl = _data["hentai_video"]["poster_url"].Value;
-                    string storyboardUrl = _data["hentai_video_storyboards"].First()["url"].Value;
+                    string thumbnailUrl = _data["hentai_video"]["poster_url"].ToString();
+                    string storyboardUrl = _data["hentai_video_storyboards"].First()["url"].ToString();
 
                     await Requests.DownloadFileFromUrl(thumbnailUrl, newPath, fileName: $"{slug}-thumbnail");
                     await Requests.DownloadFileFromUrl(storyboardUrl, newPath, fileName: $"{slug}-storyboard");
 
-                    await Requests.DownloadFileFromUrl(coverUrl, newPath, fileName: slug);
-                    await Requests.DownloadFileFromUrl(m3u8Url, newPath, fileName: slug);
-                    await VideoConverter.M3u8ToMp4(m3u8Path, mp4Path, entry);
+                    //await Requests.DownloadFileFromUrl(coverUrl, newPath, fileName: slug);
+                    //await Requests.DownloadFileFromUrl(m3u8Url, newPath, fileName: slug);
+
+
+                    await VideoConverter.DownloadYoutubeVideo(m3u8Url, newPath, entry.SubItems[i], showProgress: true, fileName: slug);
+
+                    //await VideoConverter.M3u8ToMp4(m3u8Path, mp4Path, entry.SubItems[i], showProgress: true);
 
                     int percent = (ind * 100) / slugs.Count;
                     await Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         entry.Bar.Value = percent;
+                        entry.SubItems[i].StatusMsg = UrlEntry.FINISHED;
 
                         entry.FilesMsg = $"{ind}/{slugs.Count()}";
                     }), DispatcherPriority.Background);
@@ -111,7 +128,7 @@ namespace WpfDownloader.Sites
             //Get highest quality (1080p -> 720p -> 420p, etc)
             await UpdateData(slug);
             string m3u8Url = _data["videos_manifest"]["servers"].First()["streams"]
-                .Where(stream => stream["height"].Value != "1080")
+                .Where(stream => stream["height"].ToString() != "1080")
                 .First()["url"].ToString();
 
             return m3u8Url;

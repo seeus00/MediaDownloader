@@ -117,7 +117,7 @@ namespace WpfDownloader.Sites
                 new KeyValuePair<string, string>("hash", hash)
             };
 
-            var resp = await Requests.PostAsync(postUrl, data, headers: HEADERS);
+            var resp = await Requests.Post(postUrl, data, headers: HEADERS);
             var zipPath = $"{currPath}/temp.zip";
 
             entry.StatusMsg = "Downloading ZIP";

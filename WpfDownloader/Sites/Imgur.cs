@@ -38,10 +38,10 @@ namespace WpfDownloader.Sites
             
             var data = JsonParser.Parse(jsonStr);
 
-            _title = data["title"].Value;
-            _slugId = data["slug"].Value;
+            _title = data["title"].ToString();
+            _slugId = data["slug"].ToString();
 
-            return data["chapters"]["1"]["groups"]["1"].Select(img => img["src"].Value);
+            return data["chapters"]["1"]["groups"]["1"].Select(img => img["src"].ToString());
         }
     }
 }

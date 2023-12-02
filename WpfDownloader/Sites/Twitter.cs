@@ -128,8 +128,8 @@ namespace WpfDownloader.Sites
             var infoData = JsonParser.Parse(infoJsonStr);
             var result = infoData["data"]["user"]["result"];
 
-            string id = result["id"].Value;
-            string restId = result["rest_id"].Value;
+            string id = result["id"].ToString();
+            string restId = result["rest_id"].ToString();
 
 
             data["variables"] = new JDict();
@@ -166,7 +166,7 @@ namespace WpfDownloader.Sites
 
                 var entries = initEntries.Take(initEntries.Count() - 2);
                 var botCursor = initEntries.Skip(initEntries.Count() - 2)
-                    .Where(cursor => cursor["entryId"].Value.Contains("bottom"))
+                    .Where(cursor => cursor["entryId"].ToString().Contains("bottom"))
                     .FirstOrDefault();
 
 
@@ -205,8 +205,8 @@ namespace WpfDownloader.Sites
                         {
                             var videosWithBitrates = variant.Where(video => video["bitrate"] != null);
                             //Sort by bitrate, get video with the highest bitrate = highest quality (usually 720p)
-                            var highestQualVideo = videosWithBitrates.MaxBy(media => int.Parse(media["bitrate"].Value));
-                            urls.Add(highestQualVideo["url"].Value);
+                            var highestQualVideo = videosWithBitrates.MaxBy(media => int.Parse(media["bitrate"].ToString()));
+                            urls.Add(highestQualVideo["url"].ToString());
                         }
                     }
                 }

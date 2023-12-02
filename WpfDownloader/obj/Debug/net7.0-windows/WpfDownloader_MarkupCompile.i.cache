@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\casey\Documents\Github\HentaiDownloader\WpfDownloader\App.xaml
-2463866462
+3-1426316454
 1-1891107055
-77-232489170
-266779257600
-MainWindow.xaml;Themes\DarkTheme.xaml;
+90-1124429560
+267-1641934136
+MainWindow.xaml;Themes\DarkTheme.xaml;WpfData\Controls\TreeViewControl.xaml;
 
 False
 

@@ -56,8 +56,10 @@ namespace Downloader.Util
             string currInfo = await File.ReadAllTextAsync(JSON_FILE);
             if (string.IsNullOrEmpty(currInfo))
             {
-                var arrOfEntries = new JArray();
-                arrOfEntries.Add(addInfo);
+                var arrOfEntries = new JArray()
+                {
+                    addInfo
+                };
 
                 await File.WriteAllTextAsync(JSON_FILE, string.Empty);
                 await File.WriteAllTextAsync(JSON_FILE, JsonParser.Serialize(arrOfEntries).ToString());
@@ -67,12 +69,14 @@ namespace Downloader.Util
                 var data = JsonParser.Parse(currInfo);
 
                 //Entry already exist, don't add duplicates
-                if (data.Where(entry => entry["code"].Value == info.CodeId.ToString()).Any())
+                if (data.Where(entry => entry["code"].ToString() == info.CodeId.ToString()).Any())
                 {
                     semaphoreSlim.Release();
                     return;
                 }
                 data.Add(addInfo);
+
+                var val = JsonParser.Serialize(data).ToString();
 
                 await File.WriteAllTextAsync(JSON_FILE, string.Empty);
                 await File.WriteAllTextAsync(JSON_FILE, JsonParser.Serialize(data).ToString());

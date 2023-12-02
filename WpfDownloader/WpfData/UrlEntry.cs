@@ -8,6 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Collections;
 using System.Threading;
+using System.Security.Policy;
+using System.Windows.Threading;
+using Google.Protobuf.WellKnownTypes;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace WpfDownloader.WpfData
 {
@@ -34,14 +39,28 @@ namespace WpfDownloader.WpfData
             {
                 return CancelTokenSource.Token;
             }
-            set
-            {
-                value = CancelTokenSource.Token;
-            }
         } 
 
         public string ImgIconPath { get; set; }
         public string Number { get; set; }
+
+
+        private ObservableCollection<UrlEntry> subItems = new ObservableCollection<UrlEntry>();
+        public ObservableCollection<UrlEntry> SubItems
+        {
+            get
+            {
+                return subItems;
+            }
+
+            set 
+            {
+                subItems = value;
+                NotifyPropertyChanged("SubItems");
+            }
+
+        }
+
 
         private string _url;
         public string Url { 
@@ -110,14 +129,9 @@ namespace WpfDownloader.WpfData
         public UrlEntry()
         {
             Bar = new ProgressBar();
-            CancelButton = new Button();
-            Bar.ValueChanged += Bar_ValueChanged;
+            //CancelButton = new Button();
         }
 
-        private void Bar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            //NotifyPropertyChanged("Bar");
-        }
 
         public UrlEntry(string imgIconPath, string name, string statusMsg, 
             ProgressBar bar)
@@ -127,6 +141,22 @@ namespace WpfDownloader.WpfData
             StatusMsg = statusMsg;
             Bar = bar;
         }
+
+
+        //Opens file explorer to the path
+        public void OpenPath()
+        {
+            if (string.IsNullOrEmpty(DownloadPath)) return;
+
+            string path = DownloadPath.Replace('/', '\\');
+            using Process fileopener = new Process();
+
+            fileopener.StartInfo.FileName = "explorer";
+            fileopener.StartInfo.Arguments = "\"" + path + "\"";
+            fileopener.Start();
+        }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -169,14 +199,9 @@ namespace WpfDownloader.WpfData
                     {
                         return -1;
                     }
-                    else
-                    {
-                        return 0;
-                    }
-                }else
-                {
-                    return 0;
                 }
+
+                return 0;
             }
         }
 

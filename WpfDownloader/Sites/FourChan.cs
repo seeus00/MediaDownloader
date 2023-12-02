@@ -34,7 +34,7 @@ namespace WpfDownloader.Sites
             entry.StatusMsg = "Retrieving";
             entry.Name = "[4Chan] " + threadId;
 
-            await DownloadUtil.DownloadAllUrls(mediaUrls, newPath, entry);
+            await DownloadUtil.DownloadAllUrls(mediaUrls, newPath, entry, overrideDownloadedFiles: false);
         }
 
         public async Task<IEnumerable<string>> GetMediaUrls()
@@ -46,17 +46,17 @@ namespace WpfDownloader.Sites
             var data = JsonParser.Parse(jsonStr);
             var subVal = data["posts"].First()["sub"];
 
-            _threadTitle = (subVal != null) ? RemoveIllegalChars(subVal.Value) : string.Empty;
+            _threadTitle = (subVal != null) ? RemoveIllegalChars(subVal.ToString()) : string.Empty;
 
-            //_threadName = data["posts"].First()["sub"].Value;
+            //_threadName = data["posts"].First()["sub"].ToString();
             return 
                 data["posts"]
                 .Where(post => post["ext"] != null)
-                .Select(post => $"https://i.4cdn.org/{_board}/{post["tim"].Value}{post["ext"].Value}"); 
+                .Select(post => $"https://i.4cdn.org/{_board}/{post["tim"].ToDouble}{post["ext"]}"); 
 
             //return new Regex("fileThumb\" href=\"(.*?)\"")
             //    .Matches(html)
-            //    .Select(match => "https:" + match.Groups[1].Value);
+            //    .Select(match => "https:" + match.Groups[1].ToString());
         }
     }
 }

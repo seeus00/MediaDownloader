@@ -9,10 +9,18 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="WpfData\Controls\TreeViewControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\DarkTheme.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="WpfData\Controls\TreeViewControl.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

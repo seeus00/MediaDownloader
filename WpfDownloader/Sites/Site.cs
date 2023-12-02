@@ -19,7 +19,7 @@ namespace WpfDownloader.Sites
         private string _url;
 
         public string Url { get => _url; set => 
-                _url = value.EndsWith("/") ? value.Substring(0, value.Length - 1) : value;
+            _url = value.EndsWith("/") ? value.Substring(0, value.Length - 1) : value;
         }
 
         public string Args { get; set; }

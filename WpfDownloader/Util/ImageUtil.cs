@@ -8,45 +8,44 @@ namespace WpfDownloader.Util
 {
     public static class ImageUtil
     {
-        public static async Task WebpToJpg(string webpPath)
+        public static async Task<string> WebpToJpg(string webpPath)
         {
-            string jpgPath;
-            using (var image = new MagickImage(webpPath)) // fileData could be file path or byte array etc.
-            {
-                image.Format = MagickFormat.Jpeg;
+            using var image = new MagickImage(webpPath); // fileData could be file path or byte array etc.
+            
+            image.Format = MagickFormat.Jpeg;
 
-                var jpgBytes = image.ToByteArray();
+            var jpgBytes = image.ToByteArray();
 
-                var splitUrl = webpPath.Split('/');
-                string pathWithoutFile = string.Join('/', splitUrl.SkipLast(1));
-                string fileName = splitUrl[splitUrl.Length - 1].Split('.')[0];
+            var splitUrl = webpPath.Split('/');
+            string pathWithoutFile = string.Join('/', splitUrl.SkipLast(1));
+            string fileName = splitUrl[splitUrl.Length - 1].Split('.')[0];
                     
-                jpgPath = $"{pathWithoutFile}/{fileName}.jpg";
-                if (File.Exists(jpgPath)) return;
+            string jpgPath = $"{pathWithoutFile}/{fileName}.jpg";
+            if (File.Exists(jpgPath)) return jpgPath;
 
-                await image.WriteAsync(jpgPath);
-            }
+            await image.WriteAsync(jpgPath);
+            
 
             File.Delete(webpPath);
+
+            return jpgPath;
         }
 
         public static async Task<string> PngToJpg(string pngPath)
         {
-            string jpgPath;
-            using (var image = new MagickImage(pngPath)) // fileData could be file path or byte array etc.
-            {
-                image.Format = MagickFormat.Jpeg;
+            using var image = new MagickImage(pngPath); // fileData could be file path or byte array etc.
+            
+            image.Format = MagickFormat.Jpeg;
 
-                var jpgBytes = image.ToByteArray();
+            var jpgBytes = image.ToByteArray();
 
-                var splitUrl = pngPath.Split('/');
-                string pathWithoutFile = string.Join('/', splitUrl.SkipLast(1));
-                string fileName = splitUrl[splitUrl.Length - 1].Split('.')[0];
+            var splitUrl = pngPath.Split('/');
+            string pathWithoutFile = string.Join('/', splitUrl.SkipLast(1));
+            string fileName = splitUrl[splitUrl.Length - 1].Split('.')[0];
 
-                jpgPath = $"{pathWithoutFile}/{fileName}.jpg";
-                await image.WriteAsync(jpgPath);
-            }
-
+            string jpgPath = $"{pathWithoutFile}/{fileName}.jpg";
+            await image.WriteAsync(jpgPath);
+            
             File.Delete(pngPath);
 
             return jpgPath;

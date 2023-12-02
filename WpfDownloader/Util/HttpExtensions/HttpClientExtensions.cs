@@ -38,39 +38,65 @@ namespace WpfDownloader.Util.HttpExtensions
                 totalBytesRead += bytesRead;
                 progress?.Report(totalBytesRead);
             }
+
+            progress?.Report(totalBytesRead);
         }
     }
 
     public static class HttpClientExtensions
     {
-        public static async Task CopyToAsyncProgress(HttpResponseMessage resp, Stream destination, UrlEntry entry = null, CancellationToken cancellationToken = default)
+        public static async Task<long> CopyToAsyncProgress(HttpResponseMessage resp, Stream destination, UrlEntry entry = null, CancellationToken cancellationToken = default)
         {
-            using (var download = await resp.Content.ReadAsStreamAsync())
+            long bytesDownloaded = 0;
+            try
             {
-                // Ignore progress reporting when no progress reporter was 
-                // passed or when the content length is unknown
-                var contentLength = resp.Content.Headers.ContentLength;
-                if (entry == null || !contentLength.HasValue)
+                using (var download = await resp.Content.ReadAsStreamAsync())
                 {
-                    await download.CopyToAsync(destination);
-                    await destination.DisposeAsync();
-                    return;
-                }
-
-                // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
-                var relativeProgress = new Progress<long>(totalBytes => 
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    // Ignore progress reporting when no progress reporter was 
+                    // passed or when the content length is unknown
+                    var contentLength = resp.Content.Headers.ContentLength;
+                    if (entry == null || !contentLength.HasValue)
                     {
-                        Debug.WriteLine((float)totalBytes / contentLength.Value);
-                        entry.Bar.Value = ((float)totalBytes / contentLength.Value) * 100;
-                    }, DispatcherPriority.ContextIdle);
-                   
-                });
-                // Use extension method to report progress while downloading
-                await download.CopyToAsync(destination, 81920, relativeProgress, cancellationToken);
-                //entry.Bar.Value = 1;
+                        await download.CopyToAsync(destination);
+                        await destination.DisposeAsync();
+                        return bytesDownloaded;
+                    }
+
+                    entry.StatusMsg = UrlEntry.DOWNLOADING;
+
+                    // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
+                    var relativeProgress = new Progress<long>(totalBytes =>
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            //Debug.WriteLine((float)totalBytes / contentLength.Value);
+                            entry.Bar.Value = ((float)totalBytes / contentLength.Value) * 100;
+
+                            entry.FilesMsg = $"{totalBytes / 1000}MB/{contentLength.Value / 1000}MB";
+
+                            bytesDownloaded = totalBytes;
+                        }, DispatcherPriority.ContextIdle);
+
+                    });
+                    // Use extension method to report progress while downloading
+                    await download.CopyToAsync(destination, 81920, relativeProgress, cancellationToken);
+                    if (entry != null)
+                    {
+                        await Application.Current.Dispatcher.BeginInvoke(() =>
+                        {
+                            entry.Bar.Value = 100;
+                            entry.StatusMsg = UrlEntry.FINISHED;
+                        }, DispatcherPriority.Background);
+                    }
+
+                }
+            }catch (Exception e)
+            {
+                return bytesDownloaded;
             }
+
+
+            return bytesDownloaded;
         }
 
         public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, UrlEntry entry = null, CancellationToken cancellationToken = default)

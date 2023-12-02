@@ -34,6 +34,10 @@ using System.Security.Authentication;
 using System.Net.Security;
 using WpfDownloader.Config;
 using WpfDownloader.Util.UserAgent;
+using WpfDownloader.WpfData.Controls;
+using WpfDownloader.DataVirtualization;
+using TreeListView.DataVirtualization;
+using WpfDownloader.Util.LinkSaver;
 
 namespace WpfDownloader
 {
@@ -73,6 +77,8 @@ namespace WpfDownloader
         private static readonly string URLS_FILE_PATH = CONFIG_PATH + "/list.txt";
         private static readonly string ERROR_FILE_PATH = CONFIG_PATH + "/errors.log";
         private static readonly string SUMMARY_FILE_PATH = CONFIG_PATH + "/summary.log";
+        private static readonly string DEFAULT_LINKS_PATH = CONFIG_PATH + "/links";
+        private static readonly string DEFAULT_SAVE_FILE_PATH = DEFAULT_LINKS_PATH + "/default.json";
         
 
         private static readonly SiteInfo[] SITES =
@@ -110,13 +116,17 @@ namespace WpfDownloader
             new SiteInfo() { ClassName="KskMoe",  Domains="ksk\\.moe"},
             new SiteInfo() { ClassName="Avjoa",  Domains="avjoa[0-9]+"},
             new SiteInfo() { ClassName="Bato",  Domains="bato\\.to\\/series\\/[0-9]+,mangatoto.com\\/series\\/[0-9]+"},
+            new SiteInfo() { ClassName="BatoV2",  Domains="dto\\.to\\/title"},
+            new SiteInfo() { ClassName="QiwiGg",  Domains="qiwi\\.gg\\/folder\\/"},
+            new SiteInfo() { ClassName="AnimePahe",  Domains="animepahe\\.[ru|org|com]+\\/anime"},
+            new SiteInfo() { ClassName="Spotify",  Domains="spotify\\.(com|net)\\/playlist\\/(.*?)$"},
             new SiteInfo() { ClassName="Test",  Domains="test"},
         };
 
         private static readonly SemaphoreSlim _slim = new SemaphoreSlim(2);
 
         private static MainWindow openWindow = null;
-
+        private const int TREEVIEW_BOTTOM_OFFSET = 150;
 
         private ObservableCollection<UrlEntry> _urlEntries;
         private ConcurrentDictionary<Site, UrlEntry> _startingEntries;
@@ -128,6 +138,8 @@ namespace WpfDownloader
         private TextBlock _downloadingTextBlock;
         private TextBlock _finishedTextBlock;
         private TextBlock _errorTextBlock;
+
+        private TreeView treeView;
 
         private static int _downloading = 0;
         private static int _finished = 0;
@@ -154,23 +166,47 @@ namespace WpfDownloader
             Loaded += MainWindowLoaded;
             _urlTextBox = FindName("UrlTextBox") as TextBox;
 
-            _urlListView = FindName("UrlsListView") as ListView;
-            _urlListView.MaxHeight = Height - 100;
-            _urlListView.ItemsSource = _urlEntries;
+            //Tree view
+            var control = FindName("TreeViewControl") as TreeViewControl;
+            treeView = control.FindName("MainTreeView") as TreeView;
+            
+
+            treeView.ItemsSource = _urlEntries;
+            treeView.Height = Height - TREEVIEW_BOTTOM_OFFSET;
+
+            //var newModel = new UrlEntry()
+            //{
+            //    Name = "HENTAI OQWINEQIWE",
+            //    StatusMsg = "DOWNLOADING",
+            //    FilesMsg = "414/13123123819"
+            //};
+
+
+            //entryModel.Root.SubItems.Add(newModel);
+
+
+            //treeList.ItemsSource = _urlEntries;
+
+            //_urlListView = FindName("UrlsListView") as ListView;
+            //if (_urlListView == null) return;
+
+            //_urlListView.MaxHeight = Height - 100;
+            //_urlListView.ItemsSource = _urlEntries;
+
 
             _downloadingTextBlock = FindName("DownloadingTextBlock") as TextBlock;
             _finishedTextBlock = FindName("FinishedTextBlock") as TextBlock;
             _errorTextBlock = FindName("ErrorTextBlock") as TextBlock;
 
             KeyDown += OnKeyDownHandler;
-            ((INotifyCollectionChanged)_urlListView.ItemsSource).CollectionChanged +=
-             (s, e) =>
-             {
-                 if (e.Action == NotifyCollectionChangedAction.Add)
-                 {
-                     _urlListView.ScrollIntoView(_urlListView.Items[_urlListView.Items.Count - 1]);
-                 }
-             };
+            //((INotifyCollectionChanged)treeList.ItemsSource).CollectionChanged +=
+            // (s, e) =>
+            // {
+            //     //if (e.Action == NotifyCollectionChangedAction.Add)
+            //     //{
+            //     //    treeView.ScrollIntoView(treeView.Items[treeView.Items.Count - 1]);
+            //     //}
+            // };
 
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             var attribute = DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE;
@@ -223,13 +259,22 @@ namespace WpfDownloader
                 if (!File.Exists(SUMMARY_FILE_PATH)) using (File.Create(SUMMARY_FILE_PATH)) { }
 
                 await ConfigManager.ReadConfigurationFile();
-                await UserAgentUtil.InitUserAgent();     
+                await UserAgentUtil.InitUserAgent();
 
-                _urlListView.Background = SystemParameters.WindowGlassBrush;
-                //_urlListView.Background = Background;
 
+                LinkSaveManager.DefaultSavePath = DEFAULT_LINKS_PATH;
+                LinkSaveManager.DefaultSaveLinkPath = DEFAULT_SAVE_FILE_PATH;
+
+                await LinkSaveManager.InitLinkManager();
 
                 openWindow = this;
+            }
+
+            //Load saved links
+            var savedLinks = LinkSaveManager.LoadData();
+            foreach (var linkData in savedLinks)
+            {
+                await AddEntry(linkData.Url);
             }
         }
 
@@ -263,7 +308,6 @@ namespace WpfDownloader
 
         public async Task StartDownload()
         {
-            Debug.WriteLine(entryInd);
             int currLen = _startingEntries.Count;
             var tasks = new List<Task>();
 
@@ -320,10 +364,10 @@ namespace WpfDownloader
                         }
                     }finally
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            entry.CancelButton.Visibility = Visibility.Hidden;
-                        }, DispatcherPriority.Normal);
+                        //Dispatcher.Invoke(() =>
+                        //{
+                        //    entry.CancelButton.Visibility = Visibility.Hidden;
+                        //}, DispatcherPriority.Normal);
                         
 
                         _startingEntries.TryRemove(siteObj, out _);
@@ -347,6 +391,7 @@ namespace WpfDownloader
 
             tasks.Clear();
         }
+
 
         public async Task AddEntry(string addUrl)
         {
@@ -383,12 +428,13 @@ namespace WpfDownloader
                 siteObj = Activator.CreateInstance(type, url, null) as Site;
             }
 
-            await Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 _urlTextBox.Text = string.Empty;
                 _urlEntries.Add(entry);
-            }), DispatcherPriority.Background);
 
+                //treeView.ItemsSource = new VirtualizingCollection<UrlEntry>(new UrlEntryItemProvider(_urlEntries.ToList()), 100);
+            });
 
             _startingEntries.TryAdd(siteObj, entry);
 
@@ -468,6 +514,9 @@ namespace WpfDownloader
                 e.Cancel = false;
             }
 
+            //Write link data
+            await LinkSaveManager.WriteLinkData();
+
             if (WindowState == WindowState.Maximized)
             {
                 // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
@@ -512,19 +561,23 @@ namespace WpfDownloader
                 if (openFileDialog.FileName.EndsWith(".txt"))
                 {
                     var urls = await File.ReadAllLinesAsync(openFileDialog.FileName);
-                    tasks.AddRange(urls
-                        .Where(url => url.StartsWith("http"))
-                        .Select(async url =>
+                    foreach (string url in urls)
                     {
                         if (!string.IsNullOrEmpty(url)) await AddEntry(url);
-                    }));
+                    }
+                    //tasks.AddRange(urls
+                        
+                    //    .Select(async url =>
+                    //{
+                    //    if (!string.IsNullOrEmpty(url)) await AddEntry(url);
+                    //}));
                 }
                 else
                 {
-                    tasks.Add(AddEntry(openFileDialog.FileName));
+                    //tasks.Add(AddEntry(openFileDialog.FileName));
                 }
 
-                await Task.WhenAll(tasks);
+                //await Task.WhenAll(tasks);
             }
         }
         
@@ -614,6 +667,11 @@ namespace WpfDownloader
             if (item == null) return;
 
             item.CancelTokenSource.Cancel();
+        }
+
+        private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            treeView.Height = e.NewSize.Height - TREEVIEW_BOTTOM_OFFSET;
         }
     }
 }

@@ -108,23 +108,23 @@ namespace WpfDownloader.Sites
                     string finalUrl = string.Empty;
 
                     var media = result["deviation"]["media"];
-                    string baseUri = media["baseUri"].Value;
+                    string baseUri = media["baseUri"].ToString();
 
-                    if (media["types"].Last()["t"].Value == "gif")
+                    if (media["types"].Last()["t"].ToString() == "gif")
                     {
-                        string type = media["types"].Last()["b"].Value;
+                        string type = media["types"].Last()["b"].ToString();
 
-                        finalUrl = !string.IsNullOrEmpty(media["token"].First().Value) ?
-                            $"{type}?token={media["token"].First().Value}" : type;
+                        finalUrl = !string.IsNullOrEmpty(media["token"].First().ToString()) ?
+                            $"{type}?token={media["token"].First().ToString()}" : type;
                     }
                     else 
                     {
                         string type = media["types"]
-                            .Where(type => type["t"].Value == "preview")
-                            .First()["c"].Value.Replace("<prettyName>", media["prettyName"].Value);
+                            .Where(type => type["t"].ToString() == "preview")
+                            .First()["c"].ToString().Replace("<prettyName>", media["prettyName"].ToString());
                         if (media["token"] != null)
                         {
-                            finalUrl = $"{baseUri}{type}?token={media["token"].First().Value}";
+                            finalUrl = $"{baseUri}{type}?token={media["token"].First().ToString()}";
                         }
                         else
                         {
@@ -137,12 +137,12 @@ namespace WpfDownloader.Sites
                     }
                 }
 
-                if (!bool.Parse(data["hasMore"].Value))
+                if (!bool.Parse(data["hasMore"].ToString()))
                 {
                     break;
                 }
 
-                getUrl = string.Format(GET_GALLERY, _userId, data["nextOffset"].Value, 24);
+                getUrl = string.Format(GET_GALLERY, _userId, data["nextOffset"].ToString(), 24);
                 jsonStr = await Requests.GetStr(getUrl, HEADERS);
 
                 Debug.WriteLine(jsonStr);

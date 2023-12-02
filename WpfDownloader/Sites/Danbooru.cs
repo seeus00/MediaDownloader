@@ -108,30 +108,30 @@ namespace WpfDownloader.Sites
                 {
                     //var info = new DanbooruInfo()
                     //{
-                    //    Tags = post["tag_string"].Value,
-                    //    Artist = post["tag_string_artist"].Value,
-                    //    PostId = post["id"].Value,
-                    //    FileName = post["md5"].Value,
-                    //    FileExt = post["file_ext"].Value
+                    //    Tags = post["tag_string"].ToString(),
+                    //    Artist = post["tag_string_artist"].ToString(),
+                    //    PostId = post["id"].ToString(),
+                    //    FileName = post["md5"].ToString(),
+                    //    FileExt = post["file_ext"].ToString()
                     //};
                     //await DanbooruDbLoader.LoadDbInfo(info);
 
-                    if (post["last_noted_at"].Value != "null")
+                    if (post["last_noted_at"].ToString() != "null")
                     {
                         string notesJsonStr = await Requests.GetStr(string.Format(NOTES_API, 
-                            post["id"].Value), cancelToken: entry.CancelToken);
+                            post["id"].ToString()), cancelToken: entry.CancelToken);
                         var notesData = JsonParser.Parse(notesJsonStr);
 
-                        string fileUrl = post["file_url"].Value;
+                        string fileUrl = post["file_url"].ToString();
                         string fileName = fileUrl.Split('/').Last();
 
                         var captions = notesData.Select(note => new DanbooruCaptionData()
                         {
-                            Width = int.Parse(note["width"].Value),
-                            Height = int.Parse(note["height"].Value),
-                            PosX = int.Parse(note["x"].Value),
-                            PosY = int.Parse(note["y"].Value),
-                            CaptionText = note["body"].Value,
+                            Width = int.Parse(note["width"].ToString()),
+                            Height = int.Parse(note["height"].ToString()),
+                            PosX = int.Parse(note["x"].ToString()),
+                            PosY = int.Parse(note["y"].ToString()),
+                            CaptionText = note["body"].ToString(),
                             BgColor = MagickColors.Beige
                         });
 
@@ -143,13 +143,13 @@ namespace WpfDownloader.Sites
                         });
                     }
 
-                    if (post["file_url"].Value.EndsWith(".zip") && post["large_file_url"] != null)
+                    if (post["file_url"].ToString().EndsWith(".zip") && post["large_file_url"] != null)
                     {
-                        urls.Add(post["large_file_url"].Value);
+                        urls.Add(post["large_file_url"].ToString());
                     }
                     else
                     {
-                        urls.Add(post["file_url"].Value);
+                        urls.Add(post["file_url"].ToString());
                     }
                 }
 

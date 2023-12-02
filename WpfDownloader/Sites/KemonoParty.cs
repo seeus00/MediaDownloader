@@ -92,8 +92,8 @@ namespace WpfDownloader.Sites
             var creatorData = JsonParser.Parse(creatorsText);
 
             userName = UnicodeUtil.DecodeEncodedNonAsciiCharacters(creatorData
-                .Where(creator => creator["id"].Value == userId)
-                .Select(creator => creator["name"].Value).FirstOrDefault(""));
+                .Where(creator => creator["id"].ToString() == userId)
+                .Select(creator => creator["name"].ToString()).FirstOrDefault(""));
 
             newPath = $"{DEFAULT_PATH}/{domain}/{userName}";
             entry.Name = $"[{domain}] " + userName;
@@ -115,21 +115,21 @@ namespace WpfDownloader.Sites
             if (!post["attachments"].IsEmpty())
             {
                 mediaUrls.AddRange(post["attachments"].Select(attach =>
-                    $"https://{domain}.party/data{attach["path"].Value}?f={attach["name"].Value}"
+                    $"https://{domain}.party/data{attach["path"].ToString()}?f={attach["name"].ToString()}"
                 ));
             }
             if (!post["file"].IsEmpty())
             {
                 var file = post["file"];
-                mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].Value}?f={post["file"]["name"].Value}");
+                mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].ToString()}?f={post["file"]["name"].ToString()}");
             }
 
             entry.StatusMsg = "Downloading Imgs";
             await DownloadUtil.DownloadAllUrls(mediaUrls, newPath, entry, headers: IMG_HEADERS, showProgress: false);
 
             var urls = new Regex("href=\\\\\"(.*?)\\\\\"")
-                .Matches(post["content"].Value)
-                .Select(match => match.Groups[1].Value);
+                .Matches(post["content"].ToString())
+                .Select(match => match.Groups[1].ToString());
 
             entry.StatusMsg = "Downloading video urls";
             int ind = 0;
@@ -140,7 +140,7 @@ namespace WpfDownloader.Sites
                     var getResp = await Requests.Get(url);
 
                     string redirectUrl = getResp.RequestMessage.RequestUri.ToString();
-                    await VideoConverter.DownloadYoutubeVideo(redirectUrl, newPath, Args, entry, showProgress: false);
+                    await VideoConverter.DownloadYoutubeVideo(redirectUrl, newPath, entry, args: Args, showProgress: false);
                 }
 
                
@@ -165,8 +165,8 @@ namespace WpfDownloader.Sites
             var creatorData = JsonParser.Parse(creatorsText);
 
             userName = UnicodeUtil.DecodeEncodedNonAsciiCharacters(creatorData
-                .Where(creator => creator["id"].Value == userId)
-                .Select(creator => creator["name"].Value).FirstOrDefault(""));
+                .Where(creator => creator["id"].ToString() == userId)
+                .Select(creator => creator["name"].ToString()).FirstOrDefault(""));
 
             entry.Name = $"[{domain}] " + userName;
 
@@ -189,13 +189,13 @@ namespace WpfDownloader.Sites
                     if (!post["attachments"].IsEmpty())
                     {
                         mediaUrls.AddRange(post["attachments"].Select(attach => 
-                            $"https://{domain}.party/data{attach["path"].Value}?f={attach["name"].Value}"
+                            $"https://{domain}.party/data{attach["path"].ToString()}?f={attach["name"].ToString()}"
                         ));
                     }
                     if (!post["file"].IsEmpty())
                     {
                         var file = post["file"];
-                        mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].Value}?f={post["file"]["name"].Value}");
+                        mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].ToString()}?f={post["file"]["name"].ToString()}");
                     }
                 }
 

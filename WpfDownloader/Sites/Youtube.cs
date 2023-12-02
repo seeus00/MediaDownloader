@@ -20,7 +20,7 @@ namespace WpfDownloader.Sites
             entry.StatusMsg = "Downloading";
             entry.DownloadPath = newPath;
 
-            await VideoConverter.DownloadYoutubeVideo(Url, newPath, Args, entry);
+            await VideoConverter.DownloadYoutubeVideo(Url, newPath, entry, args: Args);
             entry.StatusMsg = (entry.CancelToken.IsCancellationRequested) ? "Cancelled" : "Finished";
 
         }

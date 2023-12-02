@@ -68,7 +68,7 @@ namespace WpfDownloader.Sites
             if (matches == null) return "a";
 
             
-            var g = Convert.ToUInt16(matches.Groups[2].Value + matches.Groups[1].Value, 16);
+            var g = Convert.ToUInt16(matches.Groups[2].ToString() + matches.Groups[1].ToString(), 16);
             int ggFuncResult = (int)_engine.Evaluate($"gg.m({g})");
 
             retVal = Convert.ToChar(97 + ggFuncResult) + retVal;
@@ -130,17 +130,17 @@ namespace WpfDownloader.Sites
             _headers.Add(new Tuple<string, string>("Referer", "https://hitomi.la/"));
 
             var jsData = await Requests.GetStr(string.Format(API_URL, id));
-            var jsonStr = Regex.Match(jsData, @"var galleryinfo = (.*?)$").Groups[1].Value;
+            var jsonStr = Regex.Match(jsData, @"var galleryinfo = (.*?)$").Groups[1].ToString();
 
             var data = JsonParser.Parse(jsonStr);
-            _title = RemoveIllegalChars(data["title"].Value);
+            _title = RemoveIllegalChars(data["title"].ToString());
 
             _tags = new JDict();
-            _tags["tags"] = new JArray(data["tags"].Select(tag => tag["tag"].Value));
+            _tags["tags"] = new JArray(data["tags"].Select(tag => tag["tag"].ToString()));
 
             _entry.Name = $"[Hitomi] {_title}";
 
-            var hashes = data["files"].Select(i => i["hash"].Value);
+            var hashes = data["files"].Select(i => i["hash"].ToString());
 
             if (string.IsNullOrEmpty(GG_SCRIPT_FUNC))
             {
@@ -152,19 +152,19 @@ namespace WpfDownloader.Sites
             var imgUrls = new List<string>();
             foreach (var file in data["files"])
             {
-                if (file["haswebp"].Value == "1")
+                if (file["haswebp"].ToString() == "1")
                 {
-                    string imgUrl = UrlFromUrl(UrlFromHash(file["hash"].Value, "webp", "webp"), "a");
+                    string imgUrl = UrlFromUrl(UrlFromHash(file["hash"].ToString(), "webp", "webp"), "a");
                     imgUrls.Add(imgUrl);
                 }
-                else if (file["hasavif"].Value == "1")
+                else if (file["hasavif"].ToString() == "1")
                 {
-                    imgUrls.Add(UrlFromUrl(UrlFromHash(file["hash"].Value, "avif", "avif"), "a"));
+                    imgUrls.Add(UrlFromUrl(UrlFromHash(file["hash"].ToString(), "avif", "avif"), "a"));
                 }
                 else
                 {
-                    string ext = file["name"].Value.Split('.').Last();
-                    imgUrls.Add(UrlFromUrl(UrlFromHash(file["hash"].Value, "images", ext), null));
+                    string ext = file["name"].ToString().Split('.').Last();
+                    imgUrls.Add(UrlFromUrl(UrlFromHash(file["hash"].ToString(), "images", ext), null));
                 }
             }
 

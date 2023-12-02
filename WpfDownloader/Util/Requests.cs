@@ -19,6 +19,7 @@ using System.Windows.Threading;
 using WpfDownloader.Util;
 using WpfDownloader.Util.HttpExtensions;
 using WpfDownloader.WpfData;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Downloader.Util
 {
@@ -36,6 +37,8 @@ namespace Downloader.Util
         public static readonly string DEFAULT_USER_AGENT =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36";
 
+        private static readonly int MAX_RETRIES = 5;
+        private static readonly int TIMEOUT_RETRY = 2000; //Wait x seconds before retrying
 
         static Requests()
         {
@@ -243,27 +246,27 @@ namespace Downloader.Util
             }
         }
 
-        public static async Task<HttpResponseMessage> Get(string url, List<Tuple<string, string>> headers = null,
-           CancellationToken cancelToken = default(CancellationToken))
-        {
-            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
-            {
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        if (requestMessage.Headers.Contains(header.Item1))
-                        {
-                            requestMessage.Headers.Remove(header.Item1);
-                        }
-                        requestMessage.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
-                    }
-                }
+        //public static async Task<HttpResponseMessage> Get(string url, List<Tuple<string, string>> headers = null,
+        //   CancellationToken cancelToken = default(CancellationToken))
+        //{
+        //    using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
+        //    {
+        //        if (headers != null)
+        //        {
+        //            foreach (var header in headers)
+        //            {
+        //                if (requestMessage.Headers.Contains(header.Item1))
+        //                {
+        //                    requestMessage.Headers.Remove(header.Item1);
+        //                }
+        //                requestMessage.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
+        //            }
+        //        }
 
-                var resp = await client.SendAsync(requestMessage, cancelToken);
-                return resp;
-            }
-        }
+        //        var resp = await client.SendAsync(requestMessage, cancelToken);
+        //        return resp;
+        //    }
+        //}
 
         public static async Task<HttpResponseMessage> Get(string url)
         {
@@ -275,7 +278,7 @@ namespace Downloader.Util
         }
 
 
-        public static async Task<HttpResponseMessage> PostAsync(string url, List<KeyValuePair<string, string>> payload,
+        public static async Task<HttpResponseMessage> Post(string url, List<KeyValuePair<string, string>> payload,
             List<Tuple<string, string>> headers = null)
         {
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, url))
@@ -291,9 +294,10 @@ namespace Downloader.Util
                         requestMessage.Headers.TryAddWithoutValidation(header.Item1, header.Item2);
                     }
                 }
-
+                
                 var formEncodedContent = new FormUrlEncodedContent(payload);
-                var resp = await client.PostAsync(url, formEncodedContent);
+                requestMessage.Content = formEncodedContent;
+                var resp = await client.SendAsync(requestMessage);
                 resp.EnsureSuccessStatusCode();
 
                 return resp;
@@ -541,17 +545,18 @@ namespace Downloader.Util
 
         public static async Task DownloadFileFromUrl(string url, string path,
             List<Tuple<string, string>> headers = null, string fileName = null, int retries = 0, 
-            bool duplicateFileName = false, CancellationToken cancelToken = default(CancellationToken), UrlEntry entry = null)
+            bool duplicateFileName = false, CancellationToken cancelToken = default(CancellationToken), UrlEntry entry = null, 
+            bool overrideFile = true)
         {
             if (string.IsNullOrEmpty(url))
                 return;
 
-            if (retries > 10) return;
-
-
-            if (cancelToken.IsCancellationRequested) return;
-            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
+            long downloadedRange = 0; //Make it so the download can resume where it failed.
+            for (int i = 0; i < MAX_RETRIES; i++)
             {
+                if (cancelToken.IsCancellationRequested) return;
+                using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+                
                 if (headers != null)
                 {
                     foreach (var header in headers)
@@ -560,56 +565,69 @@ namespace Downloader.Util
                     }
                 }
 
+                if (downloadedRange > 0) requestMessage.Headers.Add("Range", $"bytes={downloadedRange}");
+
+                string ext = GetFileExtensionFromUrl(url);
+                fileName = (!string.IsNullOrEmpty(fileName)) ? fileName : GetFileNameFromUrl(url);
+
+                //Don't add extension if the filename already has it
+                string currPath = (!fileName.EndsWith(ext)) ? $"{path}/{fileName}{ext}" : $"{path}/{fileName}";
+
+                //If file exists skip the file if not wanted
+                if (!overrideFile && File.Exists(currPath))
+                {
+                    if (entry != null)
+                    {
+                        entry.DownloadPath = currPath;
+                        entry.StatusMsg = UrlEntry.FINISHED;
+                        entry.FilesMsg = "Already downloaded";
+                        entry.Bar.Value = 100;
+                    }
+
+                    return;
+                }
+
                 try
                 {
                     var resp = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancelToken);
                     url = resp.RequestMessage.RequestUri.ToString();
 
-                    string ext = GetFileExtensionFromUrl(url);
-                    fileName = (!string.IsNullOrEmpty(fileName)) ? fileName : GetFileNameFromUrl(url);
-
-                    if (entry != null) entry.Name = fileName;
-
-                    //Don't add extension if the filename already has it
-                    string currPath = (!fileName.EndsWith(ext)) ? $"{path}/{fileName}{ext}" : $"{path}/{fileName}";
-
-                    //Rename duplicate file to: filename (1, 2, etc).ext
-                    if (File.Exists(currPath)) return;
-
+                 
                     if (!resp.IsSuccessStatusCode)
                     {
                         Debug.WriteLine("ERROR in Requests: " + resp.StatusCode);
-                        return;
+                        continue;
                     }
 
-                    //using (var fs = new FileStream(currPath, FileMode.Create, FileAccess.Write,
-                    //    FileShare.None, options: FileOptions.Asynchronous, bufferSize: 4096))
-                    //{
-                    //    await resp.Content.CopyToAsync(fs, cancelToken);
-                    //}
+                    if (entry != null) entry.Name = fileName;
 
                     using (var fs = new FileStream(currPath, FileMode.Create, FileAccess.Write,
                         FileShare.None, useAsync: true, bufferSize: 4096))
                     {
-                        await HttpClientExtensions.CopyToAsyncProgress(resp, fs, entry: entry,
+                        downloadedRange = await HttpClientExtensions.CopyToAsyncProgress(resp, fs, entry: entry,
                             cancellationToken: cancelToken);
                     }
 
                     if (currPath.EndsWith("png"))
                     {
-                        await ImageUtil.PngToJpg(currPath);
+                        currPath = await ImageUtil.PngToJpg(currPath);
                     }
                     else if (currPath.EndsWith("webp"))
                     {
-                        await ImageUtil.WebpToJpg(currPath);
+                        currPath = await ImageUtil.WebpToJpg(currPath);
                     }
 
+                    if (entry != null)
+                    {
+                        entry.DownloadPath = currPath;
+                    }
+
+                    break;
                 }
                 catch (Exception e)
                 {
                     Debug.WriteLine("ERROR in Requests: " + e);
-                    //await Task.Delay(2000);
-                    //await DownloadFileFromUrl(url, path, headers, fileName, ++retries);
+                    await Task.Delay(TIMEOUT_RETRY);
                 }
             }
         }   

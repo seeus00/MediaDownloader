@@ -61,7 +61,7 @@ namespace WpfDownloader.Sites
 
         public Pixiv(string url, string args) : base(url, args)
         {
-            _userId = new Regex("([0-9]+)").Match(url).Groups[1].Value;
+            _userId = new Regex("([0-9]+)").Match(url).Groups[1].ToString();
             _gifEntries = new List<ZipToGifData>();
         }
 
@@ -108,23 +108,23 @@ namespace WpfDownloader.Sites
             {
                 if (tag["translation"] != null)
                 {
-                    tags.Add(tag["translation"]["en"].Value);
+                    tags.Add(tag["translation"]["en"].ToString());
                 }else if (tag["romaji"] != null)
                 {
-                    tags.Add(tag["romaji"].Value);
+                    tags.Add(tag["romaji"].ToString());
                 }else
                 {
-                    tags.Add(tag["tag"].Value);
+                    tags.Add(tag["tag"].ToString());
                 }
             }
 
 
-            string fileUrl = data["body"]["urls"]["original"].Value;
-            switch (int.Parse(data["body"]["illustType"].Value))
+            string fileUrl = data["body"]["urls"]["original"].ToString();
+            switch (int.Parse(data["body"]["illustType"].ToString()))
             {
                 case ((int)Types.IMAGE):
                     
-                    int totalPgCount = int.Parse(data["body"]["pageCount"].Value);
+                    int totalPgCount = int.Parse(data["body"]["pageCount"].ToString());
 
                     for (int pg = 0; pg < totalPgCount; pg++)
                     {
@@ -140,9 +140,9 @@ namespace WpfDownloader.Sites
 
                     var illustFrames = ugoriaData["body"]["frames"].Select(frame => new GifFrameData()
                     {
-                        FrameName = frame["file"].Value,
+                        FrameName = frame["file"].ToString(),
                         BasePath = vidUrl.Split('/').Last().Split('.')[0],
-                        FrameDelay = int.Parse(frame["delay"].Value)
+                        FrameDelay = int.Parse(frame["delay"].ToString())
                     });
 
                     _gifEntries.Add(new ZipToGifData()
@@ -172,7 +172,7 @@ namespace WpfDownloader.Sites
             string html = await Requests.GetStr(Url, _jsonHeaders.Skip(1).ToList());
             html = html.Replace("\\", string.Empty).ToString();
             string name = new Regex("userId.*?name\":\"(.*?)\"")
-                .Match(html).Groups[1].Value;
+                .Match(html).Groups[1].ToString();
 
             _info = new JDict();
             _info["url"] = new JType(Url);
@@ -180,7 +180,7 @@ namespace WpfDownloader.Sites
             _info["name"] = new JType(name);
 
             _newPath = $"{DEFAULT_PATH}/pixiv/{_userId} - " + 
-                $"{RemoveIllegalChars(_info["name"].Value)}";
+                $"{RemoveIllegalChars(_info["name"].ToString())}";
 
             entry.Name = $"[Pixiv] {name} - {_userId}";
 

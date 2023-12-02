@@ -53,8 +53,8 @@ namespace WpfDownloader.Sites
             var data = JsonParser.Parse(dataStr);
 
             return data["assets"]
-                .Where(asset => asset["asset_type"].Value == "image")
-                .Select(asset => asset["image_url"].Value);
+                .Where(asset => asset["asset_type"].ToString() == "image")
+                .Select(asset => asset["image_url"].ToString());
         }
 
         public async Task<IEnumerable<ImgData>> GetMediaUrls()
@@ -82,7 +82,7 @@ namespace WpfDownloader.Sites
                 if (!data["data"].Any())
                     break;
 
-                var pgHashes = data["data"].Select(img => img["hash_id"].Value);
+                var pgHashes = data["data"].Select(img => img["hash_id"].ToString());
                 hashes.AddRange(pgHashes);
 
                 page++;

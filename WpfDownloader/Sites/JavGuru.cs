@@ -59,12 +59,12 @@ namespace WpfDownloader.Sites
             string html = await Requests.GetStr(Url, headers);
             var urls = new Regex("iframe_url\":\"(.*?)\"")
                 .Matches(html)
-                .Select(match => Base64Util.DecodeB64Str(match.Groups[1].Value))
+                .Select(match => Base64Util.DecodeB64Str(match.Groups[1].ToString()))
                 .ToList();
 
             int streamTapeInd  = new Regex("STREAM ([A-Z]+)<")
                 .Matches(html)
-                .Select((match, i) => new { Str = match.Groups[1].Value, Index = i } )
+                .Select((match, i) => new { Str = match.Groups[1].ToString(), Index = i } )
                 .First(val => val.Str == "ST").Index;
 
 
@@ -73,20 +73,20 @@ namespace WpfDownloader.Sites
 
             
 
-            string queryId = new Regex("jav\\.guru\\/searcho\\/\\?(.*?)=").Matches(html).First().Groups[1].Value;
-            string olid = new Regex("OLID = '(.*?)'").Match(html).Groups[1].Value;
+            string queryId = new Regex("jav\\.guru\\/searcho\\/\\?(.*?)=").Matches(html).First().Groups[1].ToString();
+            string olid = new Regex("OLID = '(.*?)'").Match(html).Groups[1].ToString();
 
             string decodedOlid = DecodeOlid(olid);
             string video_stream_url = $"https://jav.guru/searcho/?{queryId}={decodedOlid}";
 
             html = await Requests.GetStr(video_stream_url, headers);
-            var videoConfig = new Regex("vidconfig = (.*?);").Match(html).Groups[1].Value;
+            var videoConfig = new Regex("vidconfig = (.*?);").Match(html).Groups[1].ToString();
 
             var config = JsonParser.Parse(videoConfig);
-            string token = new Regex("token=(.*?)'").Matches(html).First().Groups[1].Value;
+            string token = new Regex("token=(.*?)'").Matches(html).First().Groups[1].ToString();
 
-            string urlParams = new Regex("remotecaption\\\\\\/(.*?)&token").Match(config["cors"].Value).Groups[1].Value;
-            string videoUrl = $"https://streamtape.xyz/get_video?id={config["id"].Value}&{urlParams}&token={token}&stream=1";
+            string urlParams = new Regex("remotecaption\\\\\\/(.*?)&token").Match(config["cors"].ToString()).Groups[1].ToString();
+            string videoUrl = $"https://streamtape.xyz/get_video?id={config["id"].ToString()}&{urlParams}&token={token}&stream=1";
 
             headers =
                 new List<Tuple<string, string>>()
@@ -97,7 +97,7 @@ namespace WpfDownloader.Sites
             entry.StatusMsg = "Downloading";
             await Requests.DownloadFileFromUrl(videoUrl, path, headers: headers, cancelToken: entry.CancelToken, entry: entry);
 
-            //string encodedString = new Regex("iframe_url\":\"(.*?)\"").Matches(html).First().Groups[1].Value;
+            //string encodedString = new Regex("iframe_url\":\"(.*?)\"").Matches(html).First().Groups[1].ToString();
             //byte[] b64Data = Convert.FromBase64String(encodedString);
             //string posterUrl = Encoding.UTF8.GetString(b64Data);
 
@@ -106,7 +106,7 @@ namespace WpfDownloader.Sites
             //    new Tuple<string, string>("Referer", posterUrl)
             //};
 
-            //string hash = new Regex("ed=(.*?)&").Match(posterUrl).Groups[1].Value;
+            //string hash = new Regex("ed=(.*?)&").Match(posterUrl).Groups[1].ToString();
             //string newUrl = $"https://jav.guru/searcho/?er={string.Join("", hash.Reverse())}";
 
             //var resp = await Requests.Get(newUrl, headers: headers, entry.CancelToken);
@@ -122,7 +122,7 @@ namespace WpfDownloader.Sites
             //string jsonStr = await Requests.GetStrPost($"https://vanfem.com/api/source/{id}", values);
             //var data = JsonParser.Parse(jsonStr);
 
-            //if (data["success"].Value != "true")
+            //if (data["success"].ToString() != "true")
             //{
             //    entry.StatusMsg = "Api Error";
             //    return;
@@ -133,8 +133,8 @@ namespace WpfDownloader.Sites
             //if (!Directory.Exists(newPath)) Directory.CreateDirectory(newPath);
 
             //string highestQualityVideoUrlRedirect = data["data"]
-            //    .Where(video => video["label"].Value == "720p")
-            //    .Select(video => video["file"].Value).First();
+            //    .Where(video => video["label"].ToString() == "720p")
+            //    .Select(video => video["file"].ToString()).First();
 
             //headers = new List<Tuple<string, string>>()
             //{

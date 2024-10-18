@@ -1,4 +1,5 @@
-﻿using Downloader.Util;
+﻿using ChromeCookie;
+using Downloader.Util;
 using MonoTorrent;
 using MonoTorrent.BEncoding;
 using Org.BouncyCastle.Utilities.Encoders;
@@ -19,6 +20,8 @@ namespace WpfDownloader.Sites
 {
     public class JavGuru : Site
     {
+        private static CookieContainer _cookieContainer = null;
+
         public JavGuru(string url, string args) : base(url, args)
         {
 
@@ -47,6 +50,15 @@ namespace WpfDownloader.Sites
 
             entry.DownloadPath = path;
 
+            if (_cookieContainer == null)
+            {
+                var baseAddress = new Uri("https://jav.guru/");
+                _cookieContainer = new CookieContainer();
+                _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies("jav.guru"));
+
+                Requests.AddCookies(_cookieContainer, baseAddress);
+            }
+
             var headers =
                 new List<Tuple<string, string>>()
                 {
@@ -56,7 +68,11 @@ namespace WpfDownloader.Sites
                 };
 
 
-            string html = await Requests.GetStr(Url, headers);
+            var resp = await Requests.Get(Url, headers: headers);
+            string html = await Requests.GetStr(resp.Headers.Location.ToString(), headers);
+
+            string code = new Regex("Movie Information:.*?Code:.*?div>(.*?)<", RegexOptions.Singleline).Match(html).Groups[1].Value.Trim();
+
             var urls = new Regex("iframe_url\":\"(.*?)\"")
                 .Matches(html)
                 .Select(match => Base64Util.DecodeB64Str(match.Groups[1].ToString()))
@@ -79,7 +95,8 @@ namespace WpfDownloader.Sites
             string decodedOlid = DecodeOlid(olid);
             string video_stream_url = $"https://jav.guru/searcho/?{queryId}={decodedOlid}";
 
-            html = await Requests.GetStr(video_stream_url, headers);
+            resp = await Requests.Get(video_stream_url, headers: headers);
+            html = await Requests.GetStr(resp.Headers.Location.ToString(), headers);
             var videoConfig = new Regex("vidconfig = (.*?);").Match(html).Groups[1].ToString();
 
             var config = JsonParser.Parse(videoConfig);
@@ -95,7 +112,8 @@ namespace WpfDownloader.Sites
                 };
 
             entry.StatusMsg = "Downloading";
-            await Requests.DownloadFileFromUrl(videoUrl, path, headers: headers, cancelToken: entry.CancelToken, entry: entry);
+            await Requests.DownloadFileFromUrl(videoUrl, path, fileName: RemoveIllegalChars(code) + ".mp4", 
+                headers: headers, cancelToken: entry.CancelToken, entry: entry, redirectUrl: true);
 
             //string encodedString = new Regex("iframe_url\":\"(.*?)\"").Matches(html).First().Groups[1].ToString();
             //byte[] b64Data = Convert.FromBase64String(encodedString);

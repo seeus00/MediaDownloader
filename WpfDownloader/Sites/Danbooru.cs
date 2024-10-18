@@ -27,7 +27,6 @@ namespace WpfDownloader.Sites
            new List<Tuple<string, string>>()
            {
                 new Tuple<string, string>("User-Agent", UserAgentUtil.CURR_USER_AGENT),
-                new Tuple<string, string>("Referer", "danbooru.donmai.us"),
            };
         
         private static readonly string NOTES_API = "https://danbooru.donmai.us/notes.json?group_by=note&search[post_id]={0}";
@@ -57,7 +56,7 @@ namespace WpfDownloader.Sites
             _escTags = RemoveIllegalChars(_escTags);
             _newPath = $"{DEFAULT_PATH}/danbooru/{_escTags}";
 
-            await DownloadUtil.DownloadAllUrls(entries, _newPath, entry, headers: HEADERS);
+            await DownloadUtil.DownloadAllUrls(entries, _newPath, entry);
 
             //if (_captionsContainer.Any())
             //{

@@ -22,11 +22,16 @@ using MenuItem = System.Windows.Controls.MenuItem;
 
 namespace WpfDownloader.WpfData.Controls
 {
-    /// <summary>
-    /// Interaction logic for TreeViewControl.xaml
-    /// </summary>
+    public class LinkEventArgs : EventArgs
+    {
+        public LinkData Data { get; set; }
+    }
+
+
     public partial class TreeViewControl : UserControl
     {
+        public event EventHandler<LinkEventArgs> DownloadMenuClicked;
+
         private TreeListView.TreeListView treeView;
 
         public TreeViewControl()
@@ -89,7 +94,7 @@ namespace WpfDownloader.WpfData.Controls
             FindAndRemove(selectedEntry, source);
 
             (treeView.ContextMenu.Items[2] as MenuItem).Visibility = Visibility.Visible;
-            (treeView.ContextMenu.Items[3] as MenuItem).Visibility = Visibility.Collapsed;
+            (treeView.ContextMenu.Items[treeView.ContextMenu.Items.Count - 1] as MenuItem).Visibility = Visibility.Collapsed;
         }
 
         private async void SaveMenuItem_Click(object sender, RoutedEventArgs e)
@@ -140,11 +145,13 @@ namespace WpfDownloader.WpfData.Controls
                     FullPath = selectedEntry.DownloadPath
                 }))
                 {
+                    (treeView.ContextMenu.Items[4] as MenuItem).Visibility = Visibility.Visible;
                     (treeView.ContextMenu.Items[3] as MenuItem).Visibility = Visibility.Visible;
                     (treeView.ContextMenu.Items[2] as MenuItem).Visibility = Visibility.Collapsed;
                 }
                 else
                 {
+                    (treeView.ContextMenu.Items[4] as MenuItem).Visibility = Visibility.Collapsed;
                     (treeView.ContextMenu.Items[2] as MenuItem).Visibility = Visibility.Visible;
                     (treeView.ContextMenu.Items[3] as MenuItem).Visibility = Visibility.Collapsed;
                 }
@@ -153,7 +160,7 @@ namespace WpfDownloader.WpfData.Controls
             else
             {
                 treeView.ContextMenu = treeView.Resources["ChildNodeContext"] as ContextMenu;
-                if (File.Exists(selectedEntry.DownloadPath))
+                if (selectedEntry != null && File.Exists(selectedEntry.DownloadPath))
                 {
                     (treeView.ContextMenu.Items[2] as MenuItem).Visibility = Visibility.Visible;
                 }else
@@ -179,6 +186,39 @@ namespace WpfDownloader.WpfData.Controls
             }
             
             e.Handled = true;
+        }
+
+
+        protected virtual void OnClickedMenuReached(LinkEventArgs e)
+        {
+            EventHandler<LinkEventArgs> handler = DownloadMenuClicked;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void DownloadLinkMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedEntry = treeView.SelectedItem as UrlEntry;
+            if (selectedEntry == null) return;
+
+            var data = new LinkData()
+            {
+                Url = selectedEntry.Url,
+                FullPath = selectedEntry.DownloadPath
+            };
+            if (!LinkSaveManager.ContainsLinkData(data)) return;
+
+            OnClickedMenuReached(new LinkEventArgs()
+            {
+                Data = data
+            });
+
+            (treeView.ContextMenu.Items[4] as MenuItem).Visibility = Visibility.Collapsed;
+
+            var source = treeView.ItemsSource as ObservableCollection<UrlEntry>;
+            FindAndRemove(selectedEntry, source);
         }
     }
 }

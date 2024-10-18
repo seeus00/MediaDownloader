@@ -17,6 +17,8 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Navigation;
 using WpfDownloader.Util.UserAgent;
+using System.Net;
+using ChromeCookie;
 
 namespace WpfDownloader.Sites
 {
@@ -48,7 +50,9 @@ namespace WpfDownloader.Sites
         private const string API_URL = "https://animepahe.ru/api?m=release&id={0}&sort=episode_asc&page={1}";
         private const string ANIME_URL = "https://animepahe.ru/anime";
 
-        private const string KWIK_REFERER = "https://kwik.cx";
+        //private const string KWIK_REFERER = "https://kwik.cx";
+
+        private CookieContainer cookieContainer;
 
         public AnimePahe(string url, string args) : base(url, args)
         {
@@ -93,10 +97,12 @@ namespace WpfDownloader.Sites
                     .Last(); //Last element is 1080p
 
             string kwikUrl = highestQualVid.DataSrc;
+            string topLevelDomain = kwikUrl.Split(".").Last().Split("/").First();
+
 
             var headers = new List<Tuple<string, string>>()
             {
-                new Tuple<string, string>("Referer", KWIK_REFERER)
+                new Tuple<string, string>("Referer", $"https://kwik.{topLevelDomain}")
             };
 
             await Task.Delay(1000);
@@ -119,6 +125,17 @@ namespace WpfDownloader.Sites
         public override async Task DownloadAll(UrlEntry entry)
         {
             entry.StatusMsg = "Getting urls";
+
+            if (cookieContainer == null)
+            {
+                var baseAddress = new Uri("https://animepahe.ru");
+                cookieContainer = new CookieContainer();
+
+                cookieContainer.Add(baseAddress, ChromeCookies.GetCookies("animepahe.ru"));
+                cookieContainer.Add(baseAddress, ChromeCookies.GetCookies(".animepahe.ru"));
+
+                Requests.AddCookies(cookieContainer, baseAddress);
+            }
 
             string animeSlug = Url.Split('/').Last();
             string host = new Uri(Url).Host;

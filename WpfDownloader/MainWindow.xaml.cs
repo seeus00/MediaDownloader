@@ -103,7 +103,7 @@ namespace WpfDownloader
             new SiteInfo() { ClassName="ArtStation",  Domains="artstation\\.com"},
             new SiteInfo() { ClassName="Twitter",  Domains="twitter\\.com"},
             new SiteInfo() { ClassName="EightMuses",  Domains="comics\\.8muses\\.com"},
-            new SiteInfo() { ClassName="KemonoParty",  Domains="kemono\\.party,coomer\\.party"},
+            new SiteInfo() { ClassName="KemonoParty",  Domains="kemono\\.party,coomer\\.party,kemono\\.su,coomer\\.su"},
             new SiteInfo() { ClassName="MissAv",  Domains="missav\\.com"},
             new SiteInfo() { ClassName="WebToonXYZ",  Domains="webtoon\\.xyz"},
             new SiteInfo() { ClassName="TwoChen",  Domains="2chen\\.moe"},
@@ -120,6 +120,10 @@ namespace WpfDownloader
             new SiteInfo() { ClassName="QiwiGg",  Domains="qiwi\\.gg\\/folder\\/"},
             new SiteInfo() { ClassName="AnimePahe",  Domains="animepahe\\.[ru|org|com]+\\/anime"},
             new SiteInfo() { ClassName="Spotify",  Domains="spotify\\.(com|net)\\/playlist\\/(.*?)$"},
+            new SiteInfo() { ClassName="Xvideos",  Domains="xvideos.com"},
+            new SiteInfo() { ClassName="Anchira",  Domains="anchira.to\\/g\\/[0-9]+"},
+            new SiteInfo() { ClassName="EightChanMoe",  Domains="8chan.moe\\/zoo\\/res\\/[0-9]+"},
+            new SiteInfo() { ClassName="HentaiNexus",  Domains="hentainexus\\.com\\/view\\/[0-9]+"},
             new SiteInfo() { ClassName="Test",  Domains="test"},
         };
 
@@ -129,6 +133,9 @@ namespace WpfDownloader
         private const int TREEVIEW_BOTTOM_OFFSET = 150;
 
         private ObservableCollection<UrlEntry> _urlEntries;
+        private ObservableCollection<UrlEntry> savedUrlEntries;
+
+        private ConcurrentDictionary<Site, UrlEntry> queuedEntries;
         private ConcurrentDictionary<Site, UrlEntry> _startingEntries;
         private ConcurrentDictionary<Site, UrlEntry> _inProgressEntries;
 
@@ -140,6 +147,7 @@ namespace WpfDownloader
         private TextBlock _errorTextBlock;
 
         private TreeView treeView;
+        private TreeView savedLinkstreeView;
 
         private static int _downloading = 0;
         private static int _finished = 0;
@@ -160,6 +168,9 @@ namespace WpfDownloader
 
 
             _urlEntries = new ObservableCollection<UrlEntry>();
+            savedUrlEntries = new ObservableCollection<UrlEntry>();
+
+            queuedEntries = new ConcurrentDictionary<Site, UrlEntry>();
             _startingEntries = new ConcurrentDictionary<Site, UrlEntry>();
             _inProgressEntries = new ConcurrentDictionary<Site, UrlEntry>();
 
@@ -174,25 +185,10 @@ namespace WpfDownloader
             treeView.ItemsSource = _urlEntries;
             treeView.Height = Height - TREEVIEW_BOTTOM_OFFSET;
 
-            //var newModel = new UrlEntry()
-            //{
-            //    Name = "HENTAI OQWINEQIWE",
-            //    StatusMsg = "DOWNLOADING",
-            //    FilesMsg = "414/13123123819"
-            //};
+            savedLinkstreeView = (FindName("SavedLinksTreeViewControl") as TreeViewControl).FindName("MainTreeView") as TreeView;
+            savedLinkstreeView.Height = Height - TREEVIEW_BOTTOM_OFFSET;
 
-
-            //entryModel.Root.SubItems.Add(newModel);
-
-
-            //treeList.ItemsSource = _urlEntries;
-
-            //_urlListView = FindName("UrlsListView") as ListView;
-            //if (_urlListView == null) return;
-
-            //_urlListView.MaxHeight = Height - 100;
-            //_urlListView.ItemsSource = _urlEntries;
-
+            savedLinkstreeView.ItemsSource = savedUrlEntries;
 
             _downloadingTextBlock = FindName("DownloadingTextBlock") as TextBlock;
             _finishedTextBlock = FindName("FinishedTextBlock") as TextBlock;
@@ -274,7 +270,7 @@ namespace WpfDownloader
             var savedLinks = LinkSaveManager.LoadData();
             foreach (var linkData in savedLinks)
             {
-                await AddEntry(linkData.Url);
+                await AddEntry(linkData.Url, false);
             }
         }
 
@@ -360,7 +356,7 @@ namespace WpfDownloader
                             UpdateErrors();
                             UpdateDownloading();
 
-                            Process.Start("notepad.exe", ERROR_FILE_PATH);
+                            MessageBox.Show(e.ToString(), "Error occurred", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }finally
                     {
@@ -393,7 +389,7 @@ namespace WpfDownloader
         }
 
 
-        public async Task AddEntry(string addUrl)
+        public async Task AddEntry(string addUrl, bool startImmediately = true)
         {
             //Empty text box
             if (string.IsNullOrEmpty(addUrl)) return;
@@ -410,7 +406,7 @@ namespace WpfDownloader
             UrlEntry entry = new UrlEntry()
             {
                 Url = url,
-                Number = (++entryInd).ToString(),
+                Number = (startImmediately ? _urlEntries.Count + 1 : savedUrlEntries.Count + 1).ToString(),
                 //ImgIcon = ImageUtil.ICONS[site.ClassName],
                 ImgIconPath = $"/res/{site.ClassName}.ico",
                 Name = $"[{site.ClassName}] {url}",
@@ -430,22 +426,29 @@ namespace WpfDownloader
 
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                _urlTextBox.Text = string.Empty;
-                _urlEntries.Add(entry);
-
+                if (startImmediately) _urlEntries.Add(entry);
+                else savedUrlEntries.Add(entry);
                 //treeView.ItemsSource = new VirtualizingCollection<UrlEntry>(new UrlEntryItemProvider(_urlEntries.ToList()), 100);
             });
 
-            _startingEntries.TryAdd(siteObj, entry);
+            if (startImmediately)
+            {
+                _startingEntries.TryAdd(siteObj, entry);
+                UrlTextBox.Clear();
 
-            await StartDownload();
+                await StartDownload();
+            }
+            else
+            {
+                queuedEntries.TryAdd(siteObj, entry);
+            }
         }
 
         private async void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                await AddEntry(_urlTextBox.Text);
+                await AddEntry(UrlTextBox.Text);
             }
         }
 
@@ -620,19 +623,18 @@ namespace WpfDownloader
             {
                 string clipboardData = null;
                 Exception threadEx = null;
-                Thread staThread = new Thread(
-                    delegate ()
+                Thread staThread = new Thread(() =>
+                {
+                    try
                     {
-                        try
-                        {
-                            clipboardData = Clipboard.GetText(TextDataFormat.Text);
-                        }
+                        clipboardData = Clipboard.GetText(TextDataFormat.Text);
+                    }
 
-                        catch (Exception ex)
-                        {
-                            threadEx = ex;
-                        }
-                    });
+                    catch (Exception ex)
+                    {
+                        threadEx = ex;
+                    }
+                });
                 staThread.SetApartmentState(ApartmentState.STA);
                 staThread.Start();
                 staThread.Join();
@@ -672,6 +674,20 @@ namespace WpfDownloader
         private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             treeView.Height = e.NewSize.Height - TREEVIEW_BOTTOM_OFFSET;
+        }
+
+        private async void DownloadSavedLinksButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var entry in savedUrlEntries)
+            {
+                await AddEntry(entry.Url);
+            }
+        }
+
+        private async void TreeViewControl_DownloadMenuClicked(object sender, LinkEventArgs e)
+        {
+            Debug.WriteLine(e.Data.Url);
+            await AddEntry(e.Data.Url);
         }
     }
 }

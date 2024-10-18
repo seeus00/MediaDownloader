@@ -1,7 +1,11 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Google.Protobuf.WellKnownTypes;
+using K4os.Compression.LZ4;
+using K4os.Compression.LZ4.Encoders;
+using Microsoft.Data.Sqlite;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ChromeCookie
 {
@@ -41,14 +46,15 @@ namespace ChromeCookie
             $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/Mozilla/Firefox";
 
         private static string FIREFOX_COOKIES_PATH = null;
+        private static string DEFAULT_PROFILE;
 
         static ChromeCookies()
         {
             if (string.IsNullOrEmpty(FIREFOX_COOKIES_PATH))
             {
-                string defaultProfile = GetDefaultFirefoxProfile();
-                string origCookiePath = $"{FIREFOX_USER_PATH}/{defaultProfile}/cookies.sqlite";
-                string tempCookiePath = $"{FIREFOX_USER_PATH}/{defaultProfile}/cookies_temp.sqlite";
+                DEFAULT_PROFILE = GetDefaultFirefoxProfile();
+                string origCookiePath = $"{FIREFOX_USER_PATH}/{DEFAULT_PROFILE}/cookies.sqlite";
+                string tempCookiePath = $"{FIREFOX_USER_PATH}/{DEFAULT_PROFILE}/cookies_temp.sqlite";
 
                 if (File.Exists(tempCookiePath))
                 {
@@ -110,8 +116,15 @@ namespace ChromeCookie
         {
             InitKey(localStatePath);
 
+
+            //Create temporary copy
+            string tempCookiePath = cookiePath + "_temp";
+            var sourceFile = new FileInfo(cookiePath);
+
+            sourceFile.CopyTo(tempCookiePath, true);
+
             var cookies = new CookieCollection();
-            using (var connection = new SqliteConnection($"Data Source={cookiePath}"))
+            using (var connection = new SqliteConnection($"Data Source={tempCookiePath}"))
             {
                 connection.Open();
 
@@ -156,6 +169,33 @@ namespace ChromeCookie
                         var value = (string)reader["value"];
                         cookies.Add(new Cookie(name, value));
                     }
+                }
+            }
+
+            //Get session cookies
+            string backups = $"{FIREFOX_USER_PATH}/{DEFAULT_PROFILE}/sessionstore-backups";
+            string decodedSessionJsPath = $"{backups}/decoded.json";
+            string sessionStoreJsPath = $"{backups}/recovery.jsonlz4";
+            var p = new Process();
+            p.StartInfo.FileName = "../../../tools/dejsonlz4.exe";
+            p.StartInfo.Arguments = $"\"{sessionStoreJsPath}\" \"{decodedSessionJsPath}\"";
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();
+            p.WaitForExit();
+            
+            string jsonStr = File.ReadAllText(decodedSessionJsPath);
+            var data = JsonParser.Parse(jsonStr);
+            var sessionCookies = data["cookies"].Where(info => info["host"].ToString() == domain).Select(info => 
+                new Tuple<string, string>(info["name"].ToString(), (string)info["value"].ToString()));
+
+            if (sessionCookies.Any())
+            {
+                foreach (var sessionCookie in sessionCookies)
+                {
+                    cookies.Add(new Cookie(HttpUtility.UrlEncode(sessionCookie.Item1), HttpUtility.UrlEncode(sessionCookie.Item2)));
                 }
             }
 

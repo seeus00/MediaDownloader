@@ -31,6 +31,7 @@ namespace WpfDownloader.Util.UserAgent
             process.Start();
 
             string output = await process.StandardOutput.ReadToEndAsync();
+            output = new Regex(".*?([0-9]+\\.[0-9])").Matches(output).First().Groups[1].Value;
             await process.WaitForExitAsync();
 
             string version = output.Trim().Split().Last();

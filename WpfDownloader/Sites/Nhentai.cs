@@ -55,12 +55,22 @@ namespace WpfDownloader.Sites
 
                 _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies("nhentai.net"));
                 _cookieContainer.Add(baseAddress, ChromeCookies.GetCookies(".nhentai.net"));
+
+
                 Requests.AddCookies(_cookieContainer, baseAddress);
 
                 string userAgent = UserAgentUtil.CURR_USER_AGENT;
 
                 HEADERS.Add(new Tuple<string, string>("User-Agent", userAgent));
+                HEADERS.Add(new Tuple<string, string>("Upgrade-Insecure-Requests", "1"));
+                HEADERS.Add(new Tuple<string, string>("TE", "trailers"));
+                HEADERS.Add(new Tuple<string, string>("Sec-Fetch-Site", "cross-site"));
+                HEADERS.Add(new Tuple<string, string>("Sec-Fetch-Mode", "navigate"));
+                HEADERS.Add(new Tuple<string, string>("Sec-Fetch-Dest", "document"));
                 HEADERS.Add(new Tuple<string, string>("Host", "nhentai.net"));
+                HEADERS.Add(new Tuple<string, string>("Connection", "keep-alive"));
+
+
             }
 
             var path = Url.Split('/')[3];
@@ -74,7 +84,7 @@ namespace WpfDownloader.Sites
 
                 if (mediaUrls == null)
                 {
-                    entry.StatusMsg = "Doujin doesn't exist";
+                    //entry.StatusMsg = "Doujin doesn't exist";
                     return;
                 }
 
@@ -251,10 +261,15 @@ namespace WpfDownloader.Sites
             await Task.Delay(1000);
 
             var resp = await Requests.Get($"https://nhentai.net/api/gallery/{code}", headers: HEADERS);
-            if (resp.StatusCode != HttpStatusCode.OK)
-            {
-                return null;
-            }
+            string test = await resp.Content.ReadAsStringAsync();
+
+            resp.EnsureSuccessStatusCode();
+
+            //if (resp.StatusCode != HttpStatusCode.OK)
+            //{
+            //    entry.StatusMsg = $"Status Code Response: {resp.StatusCode}";
+            //    return null;
+            //}
 
             var data = JsonParser.Parse(await resp.Content.ReadAsStringAsync());
 

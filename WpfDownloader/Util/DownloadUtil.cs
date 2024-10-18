@@ -1,5 +1,4 @@
 ﻿using Downloader.Data;
-using Npgsql.TypeMapping;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -99,7 +98,7 @@ namespace Downloader.Util
             bool fileNameNumber = false, bool dulpicateFileName = false,
             bool showProgress = true, bool setDownloadPath = true,
             int delayInBetween = -1, List<ZipToGifData> gifEntries = null, int maxThreads = 5,
-            bool overrideDownloadedFiles = true)
+            bool overrideDownloadedFiles = true, bool redirectUri = false)
         {
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
@@ -141,15 +140,15 @@ namespace Downloader.Util
 
                         if (fileNameNumber)
                         {
-                            await Requests.DownloadFileFromUrl(pair.Value, path, headers,(pair.Key + 1).ToString(), 
+                            await Requests.DownloadFileFromUrl(pair.Value, path, headers: headers,(pair.Key + 1).ToString(), 
                                 duplicateFileName: dulpicateFileName, cancelToken: entry.SubItems[pair.Key].CancelToken, 
-                                entry: entry.SubItems[pair.Key], overrideFile: overrideDownloadedFiles);
+                                entry: entry.SubItems[pair.Key], overrideFile: overrideDownloadedFiles, redirectUrl: redirectUri);
                         }
                         else
                         {
-                            await Requests.DownloadFileFromUrl(pair.Value, path, headers,
+                            await Requests.DownloadFileFromUrl(pair.Value, path, headers: headers,
                                 duplicateFileName: dulpicateFileName, cancelToken: entry.SubItems[pair.Key].CancelToken, 
-                                entry: entry.SubItems[pair.Key], overrideFile: overrideDownloadedFiles);
+                                entry: entry.SubItems[pair.Key], overrideFile: overrideDownloadedFiles, redirectUrl: redirectUri);
                         }
                         if (showProgress)
                         {

@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using WpfDownloader.Util.UserAgent;
 using WpfDownloader.WpfData;
 
 namespace WpfDownloader.Sites
@@ -16,7 +17,7 @@ namespace WpfDownloader.Sites
         private static readonly List<Tuple<string, string>> HEADERS =
             new List<Tuple<string, string>>()
             {
-                new Tuple<string, string>("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36 Edg/99.0.1150.55"),
+                new Tuple<string, string>("User-Agent", UserAgentUtil.CURR_USER_AGENT),
                 new Tuple<string, string>("Referer", "https://rule34.xxx")
             };
 
@@ -73,7 +74,7 @@ namespace WpfDownloader.Sites
                 
 
                 //var matches = new Regex("file_url=\"(.*?)\"", RegexOptions.Singleline).Matches(data);
-                urls.AddRange(data.Select(post => post["file_url"].ToString()));
+                urls.AddRange(data.Select(post => Regex.Unescape(post["file_url"].ToString())));
 
                 currPid++;
                 await Task.Delay(500);

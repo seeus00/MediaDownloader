@@ -19,10 +19,10 @@ namespace WpfDownloader.Sites
 {
     public class KemonoParty : Site
     {
-        private const string POST_API = "https://{0}.party/api/{1}/user/{2}/post/{3}";
-        private const string POSTS_API = "https://{0}.party/api/{1}/user/{2}?o={3}";
-        private const string CREATOR_API = "https://{0}.party/api/creators";
-        private const int DEFAULT_POST_LIMIT = 25;
+        private const string POST_API = "https://{0}.su/api/v1/{1}/user/{2}/post/{3}";
+        private const string POSTS_API = "https://{0}.su/api/v1/{1}/user/{2}?o={3}";
+        private const string CREATOR_API = "https://{0}.su/api/v1/creators";
+        private const int DEFAULT_POST_LIMIT = 50;
 
         private static readonly List<Tuple<string, string>> HEADERS =
             new List<Tuple<string, string>>
@@ -60,15 +60,15 @@ namespace WpfDownloader.Sites
 
             if (cookieContainer == null)
             {
-                var baseAddress = new Uri($"https://www.{domain}.party/");
+                var baseAddress = new Uri($"https://www.{domain}.su/");
                 cookieContainer = new CookieContainer();
 
-                cookieContainer.Add(baseAddress, ChromeCookies.GetCookies($".{domain}.party"));
+                cookieContainer.Add(baseAddress, ChromeCookies.GetCookies($".{domain}.su"));
                 Requests.AddCookies(cookieContainer, baseAddress);
             }
 
             if (IMG_HEADERS.Count < 3)
-                IMG_HEADERS.Add(new Tuple<string, string>("referer", $"https://{domain}.party"));
+                IMG_HEADERS.Add(new Tuple<string, string>("referer", $"https://{domain}.su"));
 
             if (Url.Contains("post"))
             {
@@ -115,13 +115,13 @@ namespace WpfDownloader.Sites
             if (!post["attachments"].IsEmpty())
             {
                 mediaUrls.AddRange(post["attachments"].Select(attach =>
-                    $"https://{domain}.party/data{attach["path"].ToString()}?f={attach["name"].ToString()}"
+                    $"https://{domain}.su/data{attach["path"].ToString()}?f={attach["name"].ToString()}"
                 ));
             }
             if (!post["file"].IsEmpty())
             {
                 var file = post["file"];
-                mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].ToString()}?f={post["file"]["name"].ToString()}");
+                mediaUrls.Add($"https://{domain}.su/data{post["file"]["path"].ToString()}?f={post["file"]["name"].ToString()}");
             }
 
             entry.StatusMsg = "Downloading Imgs";
@@ -175,9 +175,12 @@ namespace WpfDownloader.Sites
             while (true)
             {
                 string getUrl = string.Format(POSTS_API, domain, service, userId, currPg);
+                var resp = await Requests.Get(getUrl, headers: HEADERS);
+
+                if (!resp.IsSuccessStatusCode) break;
+
                 //Strip newline at end of string
-                string jsonStr = (await Requests.GetStr(getUrl, HEADERS))
-                    .TrimEnd('\n');
+                string jsonStr = (await resp.Content.ReadAsStringAsync()).TrimEnd('\n');
 
                 var data = JsonParser.Parse(jsonStr);
 
@@ -189,13 +192,13 @@ namespace WpfDownloader.Sites
                     if (!post["attachments"].IsEmpty())
                     {
                         mediaUrls.AddRange(post["attachments"].Select(attach => 
-                            $"https://{domain}.party/data{attach["path"].ToString()}?f={attach["name"].ToString()}"
+                            $"https://{domain}.su/data{attach["path"].ToString()}?f={attach["name"].ToString()}"
                         ));
                     }
                     if (!post["file"].IsEmpty())
                     {
                         var file = post["file"];
-                        mediaUrls.Add($"https://{domain}.party/data{post["file"]["path"].ToString()}?f={post["file"]["name"].ToString()}");
+                        mediaUrls.Add($"https://{domain}.su/data{post["file"]["path"].ToString()}?f={post["file"]["name"].ToString()}");
                     }
                 }
 

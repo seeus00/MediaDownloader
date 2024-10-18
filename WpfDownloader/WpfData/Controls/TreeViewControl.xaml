@@ -142,6 +142,7 @@
                         <MenuItem Header="Remove" Click="RemoveMenuItem_Click"/>
                         <MenuItem Visibility="Collapsed" Header="Save link" Click="SaveMenuItem_Click"/>
                         <MenuItem Visibility="Collapsed" Header="Remove link" Click="RemoveLinkMenuItem_Click"/>
+                        <MenuItem Visibility="Collapsed" Header="Download link" Click="DownloadLinkMenuItem_Click"/>
                         <!--<MenuItem Click="RemoveAddSaveLinkMenuItem_Click">
                             <MenuItem.Style>
                                <Style TargetType="MenuItem">

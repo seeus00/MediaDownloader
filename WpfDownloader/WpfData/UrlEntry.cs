@@ -32,6 +32,8 @@ namespace WpfDownloader.WpfData
         public static readonly string DOWNLOADING = "Downloading";
         public static readonly string FINISHED = "Finished";
 
+        public bool IsReadyToDownload { get; set; } = false;
+
         public CancellationTokenSource CancelTokenSource { get; set; } = new CancellationTokenSource();
         public CancellationToken CancelToken
         {

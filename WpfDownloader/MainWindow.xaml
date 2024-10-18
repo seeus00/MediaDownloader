@@ -48,7 +48,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
         xmlns:controls="clr-namespace:WpfDownloader.WpfData.Controls"
-    Title="Casey's Downloader" Height="450" Width="800"
+        Title="Casey's Downloader" Height="450" Width="800"
         Background="#202020"
         Foreground="White"
         FontSize="15"
@@ -68,6 +68,43 @@
         SizeChanged="MetroWindow_SizeChanged">
 
     <Window.Resources>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border Name="Border" Margin="0,0,0,0" Background="Transparent"
+                  BorderBrush="Black" BorderThickness="1,1,1,1">
+                                <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              ContentSource="Header" Margin="12,2,12,2"
+                              RecognizesAccessKey="True">
+                                </ContentPresenter>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="100" />
+                                <Setter TargetName="Border" Property="Background" Value="Gray" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Panel.ZIndex" Value="100" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="Black" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="Gray" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="Black" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="{x:Type Menu}" TargetType="{x:Type Menu}">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -76,8 +113,7 @@
                     <ControlTemplate TargetType="{x:Type Menu}">
                         <!--Here is where you change the border thickness to zero on the menu-->
                         <Border BorderThickness="0">
-                            <StackPanel ClipToBounds="True" Orientation="Horizontal"
-                      IsItemsHost="True"/>
+                            <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -124,10 +160,38 @@
                     <TextBlock FontSize="12" Grid.Column="1" Grid.Row="2" Width="{Binding ElementName=entryTextBox, Path=ActualWidth}" Name="ErrorTextBlock" Text="Errors"/>
                 </Grid>
 
+                <TabControl  Grid.Column="1">
+                    <TabItem>
+                        
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock >Downloading links</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <StackPanel>
+                            <controls:TreeViewControl 
+                                x:Name="TreeViewControl">
 
-                <controls:TreeViewControl x:Name="TreeViewControl" Grid.Column="1">
-
-                </controls:TreeViewControl>
+                            </controls:TreeViewControl>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock>Saved links</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <StackPanel>
+                            <Button HorizontalAlignment="Left" Name="DownloadSavedLinksButton" Content="Download All" Click="DownloadSavedLinksButton_Click"/>
+                            <controls:TreeViewControl 
+                                x:Name="SavedLinksTreeViewControl"
+                                DownloadMenuClicked="TreeViewControl_DownloadMenuClicked">
+                                
+                            </controls:TreeViewControl>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+                
 
                 <!--<ListView MouseDoubleClick="UrlsListView_MouseDoubleClick" Name="UrlsListView"  
                     Grid.Column="1"  

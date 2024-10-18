@@ -1,5 +1,6 @@
 ﻿using Azure;
 using MySqlX.XDevAPI;
+using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace Downloader.Util
         private static readonly HttpClientHandler _handler = new HttpClientHandler()
         {
             CookieContainer = container,
-            AllowAutoRedirect = true,
+            AllowAutoRedirect = false,
             MaxAutomaticRedirections = 50
         };
 
@@ -543,10 +544,37 @@ namespace Downloader.Util
             }
         }
 
+        public static async Task<string> GetRedirectedUrl(string url, List<Tuple<string, string>> headers = null)
+        {
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+            if (headers != null)
+            {
+                if (headers != null)
+                {
+                    foreach (var header in headers) requestMessage.Headers.Add(header.Item1, header.Item2);
+                }
+            }
+
+            using HttpResponseMessage response = await client.SendAsync(requestMessage);
+            using HttpContent content = response.Content;
+
+            string redirectedUri = string.Empty;
+            if (response.StatusCode == HttpStatusCode.Found)
+            {
+                HttpResponseHeaders redirectedHeaders = response.Headers;
+                if (redirectedHeaders != null && redirectedHeaders.Location != null)
+                {
+                    redirectedUri = redirectedHeaders.Location.AbsoluteUri;
+                }
+            }
+
+            return redirectedUri;
+        }
+
         public static async Task DownloadFileFromUrl(string url, string path,
             List<Tuple<string, string>> headers = null, string fileName = null, int retries = 0, 
             bool duplicateFileName = false, CancellationToken cancelToken = default(CancellationToken), UrlEntry entry = null, 
-            bool overrideFile = true)
+            bool overrideFile = true, bool redirectUrl = false)
         {
             if (string.IsNullOrEmpty(url))
                 return;
@@ -590,9 +618,31 @@ namespace Downloader.Util
                 try
                 {
                     var resp = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancelToken);
-                    url = resp.RequestMessage.RequestUri.ToString();
 
-                 
+                    if (redirectUrl)
+                    {
+                        string redirectedUri = string.Empty;
+                        if (resp.StatusCode == HttpStatusCode.Found)
+                        {
+                            HttpResponseHeaders redirectedHeaders = resp.Headers;
+                            redirectedUri = redirectedHeaders.Where(header => header.Key == "Location").FirstOrDefault().Value.First();
+
+                            if (!redirectedUri.Contains("http"))
+                            {
+                                string host = new Uri(url).Host;
+                                redirectedUri = $"https://{host}{redirectedUri}";
+                            }
+                        }
+
+                        using var newRequestMessage = new HttpRequestMessage(HttpMethod.Get, redirectedUri);
+                        if (headers != null)
+                        {
+                            foreach (var header in headers) newRequestMessage.Headers.Add(header.Item1, header.Item2);
+                        }
+
+                        resp = await client.SendAsync(newRequestMessage, HttpCompletionOption.ResponseHeadersRead, cancelToken);
+                    }
+
                     if (!resp.IsSuccessStatusCode)
                     {
                         Debug.WriteLine("ERROR in Requests: " + resp.StatusCode);

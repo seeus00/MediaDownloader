@@ -11,122 +11,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <!--<Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Stretch">
-        <Border.Resources>
-            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
-                <Setter Property="Margin" Value="3 0 3 0"/>
-            </Style>
-            <Style x:Key="TextBlockBoldStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
-                <Setter Property="FontWeight" Value="Bold"/>
-            </Style>
-        </Border.Resources>
-
-        <Grid Grid.IsSharedSizeScope="True">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
-            <TreeViewItem Grid.Row="0" BorderThickness="1">
-                <TreeViewItem.Header>
-                    <Grid HorizontalAlignment="Left" Width="auto">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="300"/>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="150"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Name" Style="{StaticResource TextBlockBoldStyle}"/>
-                        <TextBlock Grid.Column="1" Text="Status" Style="{StaticResource TextBlockBoldStyle}"/>
-                        <TextBlock Grid.Column="2" Text="Progress" Style="{StaticResource TextBlockBoldStyle}"/>
-                        <TextBlock Grid.Column="3" Text="Files" Style="{StaticResource TextBlockBoldStyle}"/>
-                    </Grid>
-                </TreeViewItem.Header>
-            </TreeViewItem>
-
-            <TreeView x:Name="MainTreeView" Grid.Row="1" BorderBrush="Gray" BorderThickness="0 1 0 0"
-                      Height="450">
-   
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300"/>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="120"/>
-                                <ColumnDefinition Width="150"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{StaticResource TextBlockStyle}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding StatusMsg}" Style="{StaticResource TextBlockStyle}"/>
-                            <Border Grid.Column="2" BorderThickness="4">
-                                <Grid>
-                                    <mah:MetroProgressBar Value="{Binding Path=Bar.Value}" Name="DownloadBar" Minimum="0" Maximum="100" Foreground="Green"></mah:MetroProgressBar>
-                                    <TextBlock Text="{Binding ElementName=DownloadBar, Path=Value, StringFormat={}{0:0.0}%}" 
-                                        HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center"
-                                        Foreground="Black"/>
-                                </Grid>
-                            </Border>
-                            <TextBlock Grid.Column="3" Text="{Binding FilesMsg}" Style="{StaticResource TextBlockStyle}"/>
-                        </Grid>
-
-                        <HierarchicalDataTemplate.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                                <Grid Name="InnerSubItems">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="300"/>
-                                        <ColumnDefinition Width="200"/>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="150"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{StaticResource TextBlockStyle}"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding StatusMsg}" Style="{StaticResource TextBlockStyle}"/>
-                                    <Border Grid.Column="2" BorderThickness="4">
-                                        <Grid >
-                                            <mah:MetroProgressBar Value="{Binding Path=Bar.Value}" Name="DownloadBar" Minimum="0" Maximum="100" Foreground="Green"></mah:MetroProgressBar>
-                                            <TextBlock Text="{Binding ElementName=DownloadBar, Path=Value, StringFormat={}{0:0.0}%}" 
-          
-                                                HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"
-                                                Foreground="Black"/>
-                                        </Grid>
-                                    </Border>
-                                    <TextBlock Grid.Column="3" Text="{Binding FilesMsg}" Style="{StaticResource TextBlockStyle}"/>
-                                </Grid>
-                            </HierarchicalDataTemplate>
-                        </HierarchicalDataTemplate.ItemTemplate>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-        </Grid>
-    </Border>-->
     <Border BorderBrush="Black" BorderThickness="2">
-        <!--<Border.Resources>
-            <Style TargetType="ToggleButton">
-                <EventSetter Event="MouseDown" Handler="ToggleButton_MouseDown"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                            <TextBlock FontSize="20" Text="+" FontWeight="Bold"/>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="VerticalAlignment" Value="Top"/>
-                <Setter Property="HorizontalAlignment" Value="right"/>
-                <Style.Triggers>
-                    <Trigger Property="IsChecked" Value="True">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                    <TextBlock FontSize="20" Text="-" FontWeight="Bold"/>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Border.Resources>-->
         <Grid>
             <treeListView:TreeListView 
                 x:Name="MainTreeView" 
@@ -143,18 +28,6 @@
                         <MenuItem Visibility="Collapsed" Header="Save link" Click="SaveMenuItem_Click"/>
                         <MenuItem Visibility="Collapsed" Header="Remove link" Click="RemoveLinkMenuItem_Click"/>
                         <MenuItem Visibility="Collapsed" Header="Download link" Click="DownloadLinkMenuItem_Click"/>
-                        <!--<MenuItem Click="RemoveAddSaveLinkMenuItem_Click">
-                            <MenuItem.Style>
-                               <Style TargetType="MenuItem">
-                                   <Style.Triggers>
-                                       <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Converter={StaticResource parentNodeConverter}}" Value="True">
-                                           <Setter Property="Header" Value="NIGGER"/>
-                                       </DataTrigger>
-                                   </Style.Triggers>
-                               </Style>
-                           </MenuItem.Style>
-                        </MenuItem>-->
-                        <!--<MenuItem Name="SaveMenuItem" Header="Save" Click="SaveMenuItem_Click"/>-->
                     </ContextMenu>
                     <ContextMenu x:Key ="ChildNodeContext" StaysOpen="true">
                         <MenuItem Header="Open" Click="OpenMenuItem_Click"/>
@@ -162,12 +35,6 @@
                         <MenuItem Visibility="Collapsed" Header="Delete file" Click="DeleteFileMenuItem_Click"/>
                     </ContextMenu>
                 </treeListView:TreeListView.Resources>
-
-                <!--<treeListView:TreeListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type treeListView:TreeListViewItem}" BasedOn="{StaticResource MetroTreeListViewItem}">
-                        <Setter Property="ContextMenu" Value="{StaticResource SolutionContext}"/>
-                    </Style>
-                </treeListView:TreeListView.ItemContainerStyle>-->
 
                 <treeListView:TreeListView.View>
                     <GridView>
